@@ -45,6 +45,10 @@
   <ItemGroup>
     <Compile Include="AdventSolution.cs" />
     <Compile Include="Day01\Solution.cs" />
+    <Compile Include="Day02\IPolicy.cs" />
+    <Compile Include="Day02\SledPolicy.cs" />
+    <Compile Include="Day02\Solution.cs" />
+    <Compile Include="Day02\TobogganPolicy.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -58,6 +62,13 @@
     <Content Include="Day01\input.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Day02\example.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day02\input.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

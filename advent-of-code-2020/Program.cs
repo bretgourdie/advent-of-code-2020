@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace advent_of_code_2020
 {
@@ -6,9 +7,27 @@ namespace advent_of_code_2020
     {
         static void Main(string[] args)
         {
-            solveAProblem();
+            trySolveAProblem();
 
             PauseForExit();
+        }
+
+        static void trySolveAProblem()
+        {
+            try
+            {
+                solveAProblem();
+            }
+
+            catch (IOException)
+            {
+                Console.WriteLine("***** Cannot find input file; skipping to end.");
+            }
+
+            catch (NotImplementedException)
+            {
+                Console.WriteLine("***** Missing method implementation; skipping to end.");
+            }
         }
 
         static void solveAProblem()
