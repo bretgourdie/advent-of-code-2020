@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace advent_of_code_2020
 {
@@ -10,6 +6,20 @@ namespace advent_of_code_2020
     {
         static void Main(string[] args)
         {
+            solveAProblem();
+
+            PauseForExit();
+        }
+
+        static void solveAProblem()
+        {
+            // Put solution invocation here
+        }
+
+        static void PauseForExit()
+        {
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey(true);
         }
     }
 }
