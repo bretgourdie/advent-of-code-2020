@@ -51,6 +51,9 @@
     <Compile Include="Day02\TobogganPolicy.cs" />
     <Compile Include="Day03\Solution.cs" />
     <Compile Include="Day03\Toboggan.cs" />
+    <Compile Include="Day04\Passport.cs" />
+    <Compile Include="Day04\Solution.cs" />
+    <Compile Include="Day04\Validation.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -74,6 +77,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Day03\input.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day04\example.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day04\input.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
