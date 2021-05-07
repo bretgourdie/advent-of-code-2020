@@ -65,6 +65,8 @@
     <Compile Include="Day07\FindIndividualBagsInTarget.cs" />
     <Compile Include="Day07\ITraversal.cs" />
     <Compile Include="Day07\Solution.cs" />
+    <Compile Include="Day08\ProgramState.cs" />
+    <Compile Include="Day08\Solution.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -112,6 +114,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Day07\input.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day08\example.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day08\input.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
