@@ -59,6 +59,12 @@
     <Compile Include="Day06\AnyAnswered.cs" />
     <Compile Include="Day06\IAnswered.cs" />
     <Compile Include="Day06\Solution.cs" />
+    <Compile Include="Day07\BagEdge.cs" />
+    <Compile Include="Day07\BagTree.cs" />
+    <Compile Include="Day07\FindBagsHoldingTarget.cs" />
+    <Compile Include="Day07\FindIndividualBagsInTarget.cs" />
+    <Compile Include="Day07\ITraversal.cs" />
+    <Compile Include="Day07\Solution.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -100,6 +106,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Day06\input.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day07\example.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day07\input.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
