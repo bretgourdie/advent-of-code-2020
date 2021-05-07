@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace advent_of_code_2020.Day07
 {
-    class Solution : AdventSolution<string>
+    class Solution : AdventSolution
     {
         private const string targetBag = "shiny gold";
 

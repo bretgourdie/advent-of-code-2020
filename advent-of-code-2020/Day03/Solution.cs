@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace advent_of_code_2020.Day03
 {
-    class Solution : AdventSolution<string>
+    class Solution : AdventSolution
     {
         private const char tree = '#';
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace advent_of_code_2020.Day06
 {
-    class Solution : AdventSolution<string>
+    class Solution : AdventSolution
     {
         protected override void performWorkForProblem1(IList<string> inputData)
         {

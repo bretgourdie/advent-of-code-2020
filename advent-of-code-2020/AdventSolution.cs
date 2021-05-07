@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace advent_of_code_2020
 {
-    abstract class AdventSolution<Input>
+    abstract class AdventSolution
     {
         protected AdventSolution()
         {
@@ -33,7 +32,7 @@ namespace advent_of_code_2020
             solve(
                 "first example",
                 performWorkForProblem1,
-                getExampleDataset<Input>);
+                getExampleDataset);
         }
 
         public void SolveExample2()
@@ -41,7 +40,7 @@ namespace advent_of_code_2020
             solve(
                 "second example",
                 performWorkForProblem2,
-                getExampleDataset<Input>);
+                getExampleDataset);
         }
 
         public void SolveProblem1()
@@ -49,7 +48,7 @@ namespace advent_of_code_2020
             solve(
                 "first",
                 performWorkForProblem1,
-                getLiveDataset<Input>);
+                getLiveDataset);
         }
 
         public void SolveProblem2()
@@ -57,17 +56,17 @@ namespace advent_of_code_2020
             solve(
                 "second",
                 performWorkForProblem2,
-                getLiveDataset<Input>);
+                getLiveDataset);
         }
 
-        protected abstract void performWorkForProblem1(IList<Input> inputData);
+        protected abstract void performWorkForProblem1(IList<string> inputData);
 
-        protected abstract void performWorkForProblem2(IList<Input> inputData);
+        protected abstract void performWorkForProblem2(IList<string> inputData);
 
         private void solve(
             string problem,
-            Action<IList<Input>> workMethod,
-            Func<IList<Input>> inputDataLoadMethod)
+            Action<IList<string>> workMethod,
+            Func<IList<string>> inputDataLoadMethod)
         {
             Console.WriteLine(getSolvingAnnouncement(problem));
             workMethod.Invoke(inputDataLoadMethod.Invoke());
@@ -78,26 +77,17 @@ namespace advent_of_code_2020
             return $"Solving the {problem} problem...";
         }
 
-        private IList<T> getExampleDataset<T>()
+        private IList<string> getExampleDataset()
         {
-            return getDataset<T>("example.txt");
+            return getDataset("example.txt");
         }
 
-        private IList<T> getLiveDataset<T>()
+        private IList<string> getLiveDataset()
         {
-            return getDataset<T>("input.txt");
+            return getDataset("input.txt");
         }
 
-        private IList<T> getDataset<T>(
-            string filename)
-        {
-            return
-                getRawDataset(filename)
-                    .Select(x => (T)Convert.ChangeType(x, typeof(T)))
-                    .ToList();
-        }
-
-        private IList<string> getRawDataset(
+        private IList<string> getDataset(
             string filename)
         {
             var folder = getNamespaceFolder();

@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace advent_of_code_2020.Day01
 {
-    class Solution : AdventSolution<int>
+    class Solution : AdventSolution
     {
         private const int target = 2020;
 
         protected override void performWorkForProblem1(
-            IList<int> expenseEntries)
+            IList<string> inputData)
         {
+            var expenseEntries = convertInputToInts(inputData);
+
             for (int ii = 0; ii < expenseEntries.Count; ii++)
             {
                 for (int jj = ii + 1; jj < expenseEntries.Count; jj++)
@@ -28,8 +31,10 @@ namespace advent_of_code_2020.Day01
         }
 
         protected override void performWorkForProblem2(
-            IList<int> expenseEntries)
+            IList<string> inputData)
         {
+            var expenseEntries = convertInputToInts(inputData);
+
             for (int ii = 0; ii < expenseEntries.Count; ii++)
             {
                 for (int jj = ii + 1; jj < expenseEntries.Count; jj++)
@@ -50,6 +55,12 @@ namespace advent_of_code_2020.Day01
                     }
                 }
             }
+        }
+
+        private IList<int> convertInputToInts(
+            IEnumerable<string> inputData)
+        {
+            return inputData.Select(x => int.Parse(x)).ToList();
         }
     }
 }
