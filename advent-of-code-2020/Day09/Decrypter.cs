@@ -71,27 +71,24 @@ namespace advent_of_code_2020.Day09
             return false;
         }
 
-        public long FindWeakness(IList<string> inputData)
+        public long FindWeakness()
         {
-            long weaknessTarget = FindNumberWithoutSum();
-
             var contiguousNumbers = findContiguousNumbersThatSumToTarget(
-                convertToNumberList(inputData),
-                weaknessTarget);
+                FindNumberWithoutSum()
+            );
 
             return sumOfMinAndMax(contiguousNumbers);
         }
 
         private IEnumerable<long> findContiguousNumbersThatSumToTarget(
-            IList<long> inputData,
             long weaknessTarget)
         {
-            for (int ii = 0; ii < inputData.Count; ii++)
+            for (int ii = 0; ii < numberStream.Count; ii++)
             {
                 bool smallerThanWeaknessTarget = true;
-                for (int jj = ii + 1; jj < inputData.Count && smallerThanWeaknessTarget; jj++)
+                for (int jj = ii + 1; jj < numberStream.Count && smallerThanWeaknessTarget; jj++)
                 {
-                    var slice = inputData.Skip(ii).Take(jj - ii);
+                    var slice = numberStream.Skip(ii).Take(jj - ii);
                     long sliceSum = slice.Sum();
 
                     smallerThanWeaknessTarget = sliceSum < weaknessTarget;

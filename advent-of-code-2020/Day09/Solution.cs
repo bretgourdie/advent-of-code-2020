@@ -48,7 +48,7 @@ namespace advent_of_code_2020.Day09
             IList<string> inputData,
             int preambleLength)
         {
-            long weakness = new Decrypter(inputData, preambleLength).FindWeakness(inputData);
+            long weakness = new Decrypter(inputData, preambleLength).FindWeakness();
             Console.WriteLine($"The weakness is {weakness}");
         }
     }
