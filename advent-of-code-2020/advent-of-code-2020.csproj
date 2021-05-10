@@ -67,6 +67,14 @@
     <Compile Include="Day07\Solution.cs" />
     <Compile Include="Day08\ProgramState.cs" />
     <Compile Include="Day08\Solution.cs" />
+    <Compile Include="Day17\Dimension.cs" />
+    <Compile Include="Day17\Plane.cs" />
+    <Compile Include="Day17\INavigationStrategy.cs" />
+    <Compile Include="Day17\Point3D.cs" />
+    <Compile Include="Day17\Point3DNavigation.cs" />
+    <Compile Include="Day17\Point4D.cs" />
+    <Compile Include="Day17\Point4DNavigation.cs" />
+    <Compile Include="Day17\Solution.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -120,6 +128,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Day08\input.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day17\example.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day17\input.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
