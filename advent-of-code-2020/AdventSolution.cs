@@ -31,7 +31,7 @@ namespace advent_of_code_2020
         {
             solve(
                 "first example",
-                performWorkForProblem1,
+                performWorkForExample1,
                 getExampleDataset);
         }
 
@@ -39,7 +39,7 @@ namespace advent_of_code_2020
         {
             solve(
                 "second example",
-                performWorkForProblem2,
+                performWorkForExample2,
                 getExampleDataset);
         }
 
@@ -59,7 +59,17 @@ namespace advent_of_code_2020
                 getLiveDataset);
         }
 
+        protected virtual void performWorkForExample1(IList<string> inputData)
+        {
+            performWorkForProblem1(inputData);
+        }
+
         protected abstract void performWorkForProblem1(IList<string> inputData);
+
+        protected virtual void performWorkForExample2(IList<string> inputData)
+        {
+            performWorkForProblem2(inputData);
+        }
 
         protected abstract void performWorkForProblem2(IList<string> inputData);
 

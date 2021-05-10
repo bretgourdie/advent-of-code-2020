@@ -67,6 +67,8 @@
     <Compile Include="Day07\Solution.cs" />
     <Compile Include="Day08\ProgramState.cs" />
     <Compile Include="Day08\Solution.cs" />
+    <Compile Include="Day09\Decrypter.cs" />
+    <Compile Include="Day09\Solution.cs" />
     <Compile Include="Day17\Dimension.cs" />
     <Compile Include="Day17\Plane.cs" />
     <Compile Include="Day17\INavigationStrategy.cs" />
@@ -128,6 +130,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Day08\input.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day09\example.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day09\input.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Day17\example.txt">
