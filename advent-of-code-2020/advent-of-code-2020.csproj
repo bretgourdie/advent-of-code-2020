@@ -69,6 +69,11 @@
     <Compile Include="Day08\Solution.cs" />
     <Compile Include="Day09\Decrypter.cs" />
     <Compile Include="Day09\Solution.cs" />
+    <Compile Include="Day16\Solution.cs" />
+    <Compile Include="Day16\Ticket.cs" />
+    <Compile Include="Day16\UnassignedScoreField.cs" />
+    <Compile Include="Day16\Validation.cs" />
+    <Compile Include="Day16\TicketValidator.cs" />
     <Compile Include="Day17\Dimension.cs" />
     <Compile Include="Day17\Plane.cs" />
     <Compile Include="Day17\INavigationStrategy.cs" />
@@ -136,6 +141,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Day09\input.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day16\example.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day16\input.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Day17\example.txt">
