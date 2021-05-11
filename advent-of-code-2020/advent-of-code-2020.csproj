@@ -82,6 +82,14 @@
     <Compile Include="Day17\Point4D.cs" />
     <Compile Include="Day17\Point4DNavigation.cs" />
     <Compile Include="Day17\Solution.cs" />
+    <Compile Include="Day18\Add.cs" />
+    <Compile Include="Day18\AdvancedMathEvaluator.cs" />
+    <Compile Include="Day18\BasicMathEvaluator.cs" />
+    <Compile Include="Day18\IEvaluator.cs" />
+    <Compile Include="Day18\Literal.cs" />
+    <Compile Include="Day18\Multiply.cs" />
+    <Compile Include="Day18\Solution.cs" />
+    <Compile Include="Day18\TreeNode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -153,6 +161,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Day17\input.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day18\example.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day18\input.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
