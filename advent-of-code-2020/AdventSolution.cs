@@ -6,6 +6,26 @@ namespace advent_of_code_2020
 {
     abstract class AdventSolution
     {
+        protected virtual string getExample1DatasetFilename()
+        {
+            return getExampleDatasetFilename();
+        }
+
+        protected virtual string getExample2DatasetFilename()
+        {
+            return getExampleDatasetFilename();
+        }
+
+        private string getExampleDatasetFilename()
+        {
+            return "example.txt";
+        }
+
+        private string getLiveDatasetFilename()
+        {
+            return "input.txt";
+        }
+
         protected AdventSolution()
         {
             displayDay();
@@ -32,7 +52,7 @@ namespace advent_of_code_2020
             solve(
                 "first example",
                 performWorkForExample1,
-                getExampleDataset);
+                getExample1DatasetFilename());
         }
 
         public void SolveExample2()
@@ -40,7 +60,7 @@ namespace advent_of_code_2020
             solve(
                 "second example",
                 performWorkForExample2,
-                getExampleDataset);
+                getExample2DatasetFilename());
         }
 
         public void SolveProblem1()
@@ -48,7 +68,7 @@ namespace advent_of_code_2020
             solve(
                 "first",
                 performWorkForProblem1,
-                getLiveDataset);
+                getLiveDatasetFilename());
         }
 
         public void SolveProblem2()
@@ -56,7 +76,7 @@ namespace advent_of_code_2020
             solve(
                 "second",
                 performWorkForProblem2,
-                getLiveDataset);
+                getLiveDatasetFilename());
         }
 
         protected virtual void performWorkForExample1(IList<string> inputData)
@@ -76,25 +96,15 @@ namespace advent_of_code_2020
         private void solve(
             string problem,
             Action<IList<string>> workMethod,
-            Func<IList<string>> inputDataLoadMethod)
+            string inputDataFilename)
         {
             Console.WriteLine(getSolvingAnnouncement(problem));
-            workMethod.Invoke(inputDataLoadMethod.Invoke());
+            workMethod.Invoke(getDataset(inputDataFilename));
         }
 
         private string getSolvingAnnouncement(string problem)
         {
             return $"Solving the {problem} problem...";
-        }
-
-        private IList<string> getExampleDataset()
-        {
-            return getDataset("example.txt");
-        }
-
-        private IList<string> getLiveDataset()
-        {
-            return getDataset("input.txt");
         }
 
         private IList<string> getDataset(

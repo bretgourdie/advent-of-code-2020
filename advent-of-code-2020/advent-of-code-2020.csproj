@@ -92,6 +92,9 @@
     <Compile Include="Day18\Multiply.cs" />
     <Compile Include="Day18\Solution.cs" />
     <Compile Include="Day18\TreeNode.cs" />
+    <Compile Include="Day19\Rule.cs" />
+    <Compile Include="Day19\RuleSet.cs" />
+    <Compile Include="Day19\Solution.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -175,6 +178,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Day18\input.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day19\example.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day19\example2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day19\input.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
