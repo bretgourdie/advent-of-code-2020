@@ -69,6 +69,7 @@
     <Compile Include="Day08\Solution.cs" />
     <Compile Include="Day09\Decrypter.cs" />
     <Compile Include="Day09\Solution.cs" />
+    <Compile Include="Day10\Solution.cs" />
     <Compile Include="Day15\Solution.cs" />
     <Compile Include="Day15\SpokenNumber.cs" />
     <Compile Include="Day16\Solution.cs" />
@@ -154,6 +155,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Day09\input.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day10\example.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day10\input.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Day15\example.txt">
