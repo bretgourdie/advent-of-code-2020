@@ -103,9 +103,21 @@
     <Compile Include="Day19\Rule.cs" />
     <Compile Include="Day19\RuleSet.cs" />
     <Compile Include="Day19\Solution.cs" />
+    <Compile Include="Day20\Dimension.cs" />
+    <Compile Include="Day20\Sides\Down.cs" />
+    <Compile Include="Day20\Edge.cs" />
+    <Compile Include="Day20\Sides\Left.cs" />
+    <Compile Include="Day20\Orientation.cs" />
+    <Compile Include="Day20\Point2D.cs" />
+    <Compile Include="Day20\Reflection.cs" />
+    <Compile Include="Day20\Sides\Right.cs" />
+    <Compile Include="Day20\Rotation.cs" />
+    <Compile Include="Day20\Sides\Side.cs" />
     <Compile Include="Day20\Solution.cs" />
+    <Compile Include="Day20\SortedTile.cs" />
     <Compile Include="Day20\Tile.cs" />
     <Compile Include="Day20\TileSorter.cs" />
+    <Compile Include="Day20\Up.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
