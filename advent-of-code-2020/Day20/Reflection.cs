@@ -3,6 +3,6 @@
     enum Reflection
     {
         NoReflection,
-        FlipX
+        Flip
     }
 }
