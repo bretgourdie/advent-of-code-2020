@@ -4,7 +4,7 @@
     {
         public Right(int length) : base(
             new Dimension(length - 1, length - 1),
-            new Dimension(0, length))
+            new Dimension(0, length - 1))
         { }
     }
 }
