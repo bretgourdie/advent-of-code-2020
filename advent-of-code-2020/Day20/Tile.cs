@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace advent_of_code_2020.Day20
@@ -8,8 +9,7 @@ namespace advent_of_code_2020.Day20
         public readonly int Id;
 
         public readonly IList<string> Piece;
-
-        private readonly int length;
+        public readonly int Length;
 
         public Tile(IList<string> tileChunk)
         {
@@ -18,29 +18,35 @@ namespace advent_of_code_2020.Day20
             Id = int.Parse(split[1].Replace(":", ""));
 
             Piece = new List<string>(tileChunk.Skip(1));
-            length = Piece.Count;
+            Length = Piece.Count;
         }
 
         public Edge GetEdge(Side side, Reflection reflection)
         {
             var contents = new List<char>();
 
-            int xStart = 0, xEnd = 0, xDirection = 0;
-            int yStart = 0, yEnd = 0, yDirection = 0;
+            var X = side.X;
+            var Y = side.Y;
 
-            switch (side)
+            var deltaX = getDelta(X);
+            var deltaY = getDelta(Y);
+
+            for (int x = X.Start, y = Y.Start; x <= X.End && y <= Y.End; x += deltaX, y += deltaY)
             {
-                case Side.Up:
-                    break;
-                case Side.Down:
-                    break;
-                case Side.Left:
-                    break;
-                case Side.Right:
-                    break;
+                contents.Add(Piece[y][x]);
             }
 
-            return new Edge(contents, rotation, reflection);
+            if (reflection == Reflection.Flip)
+            {
+                contents.Reverse();
+            }
+
+            return new Edge(contents, reflection);
+        }
+
+        private int getDelta(Dimension dimension)
+        {
+            return Math.Min(dimension.End - dimension.Start, 1);
         }
     }
 }
