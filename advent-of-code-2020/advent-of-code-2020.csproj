@@ -117,7 +117,7 @@
     <Compile Include="Day20\SortedTile.cs" />
     <Compile Include="Day20\Tile.cs" />
     <Compile Include="Day20\TileSorter.cs" />
-    <Compile Include="Day20\Up.cs" />
+    <Compile Include="Day20\Sides\Up.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
