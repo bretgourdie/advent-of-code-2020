@@ -12,15 +12,15 @@ namespace advent_of_code_2020.Day20
 
             foreach (var tile in tiles)
             {
-                var topSide = tile.GetEdge(new Up(length), Reflection.NoReflection);
-                var leftSide = tile.GetEdge(new Left(length), Reflection.NoReflection);
-                var rightSide = tile.GetEdge(new Right(length), Reflection.NoReflection);
-                var bottomSide = tile.GetEdge(new Down(length), Reflection.NoReflection);
+                var topSide = tile.GetEdge(Side.Up, Reflection.NoReflection);
+                var leftSide = tile.GetEdge(Side.Left, Reflection.NoReflection);
+                var rightSide = tile.GetEdge(Side.Right, Reflection.NoReflection);
+                var bottomSide = tile.GetEdge(Side.Down, Reflection.NoReflection);
 
-                var topReflected = tile.GetEdge(new Up(length), Reflection.Flip);
-                var leftReflected = tile.GetEdge(new Left(length), Reflection.Flip);
-                var rightReflected = tile.GetEdge(new Right(length), Reflection.Flip);
-                var bottomReflected = tile.GetEdge(new Down(length), Reflection.Flip);
+                var topReflected = tile.GetEdge(Side.Up, Reflection.Flip);
+                var leftReflected = tile.GetEdge(Side.Left, Reflection.Flip);
+                var rightReflected = tile.GetEdge(Side.Right, Reflection.Flip);
+                var bottomReflected = tile.GetEdge(Side.Down, Reflection.Flip);
             }
             throw new NotImplementedException();
         }
