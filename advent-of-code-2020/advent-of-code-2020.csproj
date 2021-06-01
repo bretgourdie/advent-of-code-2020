@@ -70,6 +70,12 @@
     <Compile Include="Day09\Decrypter.cs" />
     <Compile Include="Day09\Solution.cs" />
     <Compile Include="Day10\Solution.cs" />
+    <Compile Include="Day11\FirstFromCenter.cs" />
+    <Compile Include="Day11\ImmediatelyAdjacent.cs" />
+    <Compile Include="Day11\IOccupiedSeatCounter.cs" />
+    <Compile Include="Day11\Point2D.cs" />
+    <Compile Include="Day11\SeatStatus.cs" />
+    <Compile Include="Day11\Solution.cs" />
     <Compile Include="Day14\IDecoder.cs" />
     <Compile Include="Day14\Mask.cs" />
     <Compile Include="Day14\Version1.cs" />
@@ -168,6 +174,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Day10\input.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day11\example.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day11\input.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Day14\example.txt">
