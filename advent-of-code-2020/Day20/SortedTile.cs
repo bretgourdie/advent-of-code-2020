@@ -2,21 +2,18 @@
 {
     class SortedTile
     {
-        public readonly Tile Tile;
-        public readonly Rotation Rotation;
-        public readonly Reflection Reflection;
-        public readonly Point2D Position;
+        private readonly Tile tile;
+        private readonly Rotation rotation;
+        private readonly Reflection reflection;
 
         public SortedTile(
             Tile tile,
             Rotation rotation,
-            Reflection reflection,
-            Point2D position)
+            Reflection reflection)
         {
-            Tile = tile;
-            Rotation = rotation;
-            Reflection = reflection;
-            Position = position;
+            this.tile = tile;
+            this.rotation = rotation;
+            this.reflection = reflection;
         }
     }
 }

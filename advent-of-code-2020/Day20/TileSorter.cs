@@ -1,27 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace advent_of_code_2020.Day20
 {
     class TileSorter
     {
+        private readonly IList<Side> sidesClockwise;
+        private readonly IList<Rotation> rotationIndex;
+        private readonly IList<Reflection> reflections;
+
+        private IDictionary<Point2D, SortedTile> sortedTiles;
+
+        public TileSorter()
+        {
+            sidesClockwise = new List<Side>() {Side.Left, Side.Up, Side.Right, Side.Down};
+            rotationIndex = new List<Rotation>()
+            {
+                Rotation.NoRotation,
+                Rotation.Clockwise90,
+                Rotation.Clockwise180,
+                Rotation.Clockwise270
+            };
+            reflections = new List<Reflection>() {Reflection.NoReflection, Reflection.Flip};
+        }
+
         public long Sort(IList<Tile> tiles)
         {
-            int length = tiles.First().Length;
+            sortedTiles = new Dictionary<Point2D, SortedTile>();
 
-            foreach (var tile in tiles)
-            {
-                var topSide = tile.GetEdge(Side.Up, Reflection.NoReflection);
-                var leftSide = tile.GetEdge(Side.Left, Reflection.NoReflection);
-                var rightSide = tile.GetEdge(Side.Right, Reflection.NoReflection);
-                var bottomSide = tile.GetEdge(Side.Down, Reflection.NoReflection);
-
-                var topReflected = tile.GetEdge(Side.Up, Reflection.Flip);
-                var leftReflected = tile.GetEdge(Side.Left, Reflection.Flip);
-                var rightReflected = tile.GetEdge(Side.Right, Reflection.Flip);
-                var bottomReflected = tile.GetEdge(Side.Down, Reflection.Flip);
-            }
             throw new NotImplementedException();
         }
 
