@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace advent_of_code_2020.Day20
 {
     class TileSorter
     {
         private readonly IList<Side> sidesClockwise;
-        private readonly IList<Rotation> rotationIndex;
+        private readonly IList<Rotation> rotationsClockwise;
         private readonly IList<Reflection> reflections;
 
         private IDictionary<Point2D, OrientedTile> sortedTiles;
@@ -14,7 +15,7 @@ namespace advent_of_code_2020.Day20
         public TileSorter()
         {
             sidesClockwise = new List<Side>() {Side.Left, Side.Up, Side.Right, Side.Down};
-            rotationIndex = new List<Rotation>()
+            rotationsClockwise = new List<Rotation>()
             {
                 Rotation.NoRotation,
                 Rotation.Clockwise90,
