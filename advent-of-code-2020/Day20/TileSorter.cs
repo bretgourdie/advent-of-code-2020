@@ -25,18 +25,51 @@ namespace advent_of_code_2020.Day20
             reflections = new List<Reflection>() {Reflection.NoReflection, Reflection.Flip};
         }
 
-        public long Sort(IList<Tile> tiles)
+        public long Sort(Queue<Tile> tiles)
         {
             sortedTiles = new Dictionary<Point2D, OrientedTile>();
 
-            throw new NotImplementedException();
+            var first = tiles.Dequeue();
+
+            sortedTiles[new Point2D(0, 0)] = new OrientedTile(
+                first,
+                Rotation.NoRotation,
+                Reflection.NoReflection,
+                rotationsClockwise,
+                sidesClockwise);
+
+            while (tiles.Any())
+            {
+                var tile = tiles.Dequeue();
+
+                foreach (var positionAndSortedTile in sortedTiles)
+                {
+                    var position = positionAndSortedTile.Key;
+                    var sortedTile = positionAndSortedTile.Value;
+
+                    for (int rotationIndex = 0; rotationIndex < rotationsClockwise.Count; rotationIndex++)
+                    {
+                        var rotation = rotationsClockwise[rotationIndex];
+
+                        for (int reflectionIndex = 0; reflectionIndex < reflections.Count; reflectionIndex++)
+                        {
+                            var reflection = reflections[reflectionIndex];
+
+                            for (int sideIndex = 0; sideIndex < sidesClockwise.Count; sideIndex++)
+                            {
+                                var side = sidesClockwise[sideIndex];
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        private bool tilesMatch(
-            OrientedTile a,
-            OrientedTile b)
+        private bool edgesMatch(
+            string edgeA,
+            string edgeB)
         {
-            throw new NotImplementedException();
+            return edgeA != null && edgeA.Equals(edgeB);
         }
 
         private long getCornerMultiplications(IList<IList<OrientedTile>> sortedTiles)
