@@ -10,7 +10,7 @@ namespace advent_of_code_2020.Day20
         private readonly IList<Rotation> rotationsClockwise;
         private readonly IList<Reflection> reflections;
 
-        private IDictionary<Point2D, OrientedTile> sortedTiles;
+        private IDictionary<Point2D, SolvedTile> solvedTiles;
 
         public TileSorter()
         {
@@ -27,25 +27,29 @@ namespace advent_of_code_2020.Day20
 
         public long Sort(Queue<Tile> tiles)
         {
-            sortedTiles = new Dictionary<Point2D, OrientedTile>();
+            solvedTiles = new Dictionary<Point2D, SolvedTile>();
 
             var first = tiles.Dequeue();
 
-            sortedTiles[new Point2D(0, 0)] = new OrientedTile(
+            var solvedOrientedTile = new OrientedTile(
                 first,
                 Rotation.NoRotation,
                 Reflection.NoReflection,
                 rotationsClockwise,
                 sidesClockwise);
 
+            solvedTiles[new Point2D(0, 0)] = new SolvedTile(solvedOrientedTile);
+
             while (tiles.Any())
             {
+                bool foundMatchingSide = false;
+
                 var tile = tiles.Dequeue();
 
-                foreach (var positionAndSortedTile in sortedTiles)
+                foreach (var positionAndSolvedTile in solvedTiles)
                 {
-                    var position = positionAndSortedTile.Key;
-                    var sortedTile = positionAndSortedTile.Value;
+                    var position = positionAndSolvedTile.Key;
+                    var solvedTile = positionAndSolvedTile.Value;
 
                     for (int rotationIndex = 0; rotationIndex < rotationsClockwise.Count; rotationIndex++)
                     {
@@ -58,8 +62,44 @@ namespace advent_of_code_2020.Day20
                             for (int sideIndex = 0; sideIndex < sidesClockwise.Count; sideIndex++)
                             {
                                 var side = sidesClockwise[sideIndex];
+
+                                var testingTile = new OrientedTile(
+                                    tile,
+                                    rotation,
+                                    reflection,
+                                    rotationsClockwise,
+                                    sidesClockwise);
+
+                                var unmatchedSides = solvedTile.GetUnmatchedSides(sidesClockwise);
+
+                                for (int unmatchedSideIndex = 0;
+                                    unmatchedSideIndex < unmatchedSides.Count;
+                                    unmatchedSideIndex++)
+                                {
+                                    var unmatchedSide = unmatchedSides[unmatchedSideIndex];
+                                    if (solvedTile.GetEdge(unmatchedSide).Equals(testingTile.GetEdge(side)))
+                                    {
+                                        foundMatchingSide = true;
+                                        var newSolvedTile = new SolvedTile(testingTile);
+
+                                        solvedTile.SetMatch(newSolvedTile, unmatchedSide);
+                                        newSolvedTile.SetMatch(solvedTile, unmatchedSide);
+
+                                        // add to solvedTile dict
+                                    }
+                                }
                             }
                         }
+                    }
+
+                    if (foundMatchingSide)
+                    {
+                        // cleanup solved adjacency
+                    }
+
+                    else
+                    {
+                        tiles.Enqueue(tile);
                     }
                 }
             }
