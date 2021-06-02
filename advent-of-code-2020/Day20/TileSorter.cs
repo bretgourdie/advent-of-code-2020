@@ -9,7 +9,7 @@ namespace advent_of_code_2020.Day20
         private readonly IList<Rotation> rotationIndex;
         private readonly IList<Reflection> reflections;
 
-        private IDictionary<Point2D, SortedTile> sortedTiles;
+        private IDictionary<Point2D, OrientedTile> sortedTiles;
 
         public TileSorter()
         {
@@ -26,12 +26,19 @@ namespace advent_of_code_2020.Day20
 
         public long Sort(IList<Tile> tiles)
         {
-            sortedTiles = new Dictionary<Point2D, SortedTile>();
+            sortedTiles = new Dictionary<Point2D, OrientedTile>();
 
             throw new NotImplementedException();
         }
 
-        private long getCornerMultiplications(IList<IList<Tile>> sortedTiles)
+        private bool tilesMatch(
+            OrientedTile a,
+            OrientedTile b)
+        {
+            throw new NotImplementedException();
+        }
+
+        private long getCornerMultiplications(IList<IList<OrientedTile>> sortedTiles)
         {
             int N = sortedTiles.Count - 1;
 
