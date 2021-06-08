@@ -31,7 +31,7 @@ namespace advent_of_code_2020.Day20
             {
                 for (int y = 0; y < yLength; y++)
                 {
-                    piece[xLength, yLength] = tileChunk[x][y];
+                    piece[x, y] = tileChunk[x][y];
                 }
             }
 

@@ -9,6 +9,8 @@ namespace advent_of_code_2020.Day20
         private IDictionary<Side, SolvedTile> matchedSides;
         private readonly OrientedTile orientedTile;
 
+        public int Id => orientedTile.Id;
+
         public SolvedTile(OrientedTile orientedTile)
         {
             this.orientedTile = orientedTile;

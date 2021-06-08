@@ -13,15 +13,15 @@ namespace advent_of_code_2020.Day20
             Console.WriteLine($"The product of the corner tiles is {cornerProduct}");
         }
 
-        private IList<Tile> loadTiles(IList<string> inputData)
+        private Queue<Tile> loadTiles(IList<string> inputData)
         {
-            var tiles = new List<Tile>();
+            var tiles = new Queue<Tile>();
             const int tileLength = 12;
 
             for (int ii = 0; ii < inputData.Count; ii += tileLength)
             {
                 var tileChunk = inputData.Skip(ii).Take(tileLength - 1).ToList();
-                tiles.Add(new Tile(tileChunk));
+                tiles.Enqueue(new Tile(tileChunk));
             }
 
             return tiles;
