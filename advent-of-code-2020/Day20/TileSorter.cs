@@ -1,27 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace advent_of_code_2020.Day20
 {
     class TileSorter
     {
-        private readonly IList<Side> sidesClockwise;
-        private readonly IList<Rotation> rotationsClockwise;
-        private readonly IList<Reflection> reflections;
         private readonly IDictionary<Side, Point2D> sideOffset;
+
+        private IDictionary<Tile, IList<OrientedTile>> tilePermutationsByTile;
 
         public TileSorter()
         {
-            sidesClockwise = new List<Side>() {Side.Left, Side.Up, Side.Right, Side.Down};
-            rotationsClockwise = new List<Rotation>()
-            {
-                Rotation.NoRotation,
-                Rotation.Clockwise90,
-                Rotation.Clockwise180,
-                Rotation.Clockwise270
-            };
-            reflections = new List<Reflection>() {Reflection.NoReflection, Reflection.Flip};
             sideOffset = loadSideOffsets();
         }
 
@@ -32,153 +23,78 @@ namespace advent_of_code_2020.Day20
 
             foreach (var tile in tiles)
             {
-                tileDict[tile] = getTilePermutations(tile);
+                tileDict[tile] = TileConversion.GetTilePermutations(tile);
             }
 
             return tileDict;
         }
 
-        public long Sort(Queue<Tile> tiles)
+        public long Sort(IList<Tile> tiles)
         {
-            var tilesToPermutation = loadTilesToPermutationDictionary(tiles);
-
-            var solvedTiles = new Dictionary<Point2D, SolvedTile>();
-
-            var first = tiles.Dequeue();
-
-            var solvedOrientedTile = new OrientedTile(
-                first,
-                Rotation.NoRotation,
-                Reflection.NoReflection,
-                rotationsClockwise,
-                sidesClockwise);
-
-            solvedTiles[new Point2D(0, 0)] = new SolvedTile(solvedOrientedTile);
-
-            while (tiles.Any())
-            {
-                bool foundMatchingSide = false;
-
-                var tile = tiles.Dequeue();
-
-                var availableSpaces = getAvailableTileSpaces(solvedTiles);
-
-                for (int availableSpaceIndex = 0; !foundMatchingSide && availableSpaceIndex < availableSpaces.Count; availableSpaceIndex++)
-                {
-                    var availableSpace = availableSpaces[availableSpaceIndex];
-
-                    for (int tilePermutationIndex = 0; tilePermutationIndex < tilesToPermutation[tile].Count && !foundMatchingSide; tilePermutationIndex++)
-                    {
-                        var tilePermutation = tilesToPermutation[tile][tilePermutationIndex];
-
-                        foundMatchingSide = isMatch(
-                            tilePermutation,
-                            availableSpace,
-                            solvedTiles);
-
-                        if (foundMatchingSide)
-                        {
-                            solvedTiles[availableSpace] = new SolvedTile(tilePermutation);
-                        }
-                    }
-                }
-
-                if (!foundMatchingSide)
-                {
-                    tiles.Enqueue(tile);
-                }
-            }
-
-            return getCornerMultiplications(solvedTiles);
+            return getCornerMultiplications(sort(tiles));
         }
 
-        private bool isMatch(
-            OrientedTile tile,
-            Point2D testingPosition,
-            IDictionary<Point2D, SolvedTile> solvedTiles)
+        private OrientedTile[,] sort(IList<Tile> tiles)
         {
-            foreach (var side in sidesClockwise)
+            var grid = getEmptyTileGrid(tiles);
+
+            var tileCombinations = getTileCombinations(tiles);
+
+            foreach (var tileCombination in tileCombinations)
             {
-                var oppositeSide = getOppositeSide(side);
-
-                var testingEdge = tile.GetEdge(side);
-
-                var solvedPosition = getPointTouchingSide(testingPosition, oppositeSide);
-
-                if (solvedTiles.ContainsKey(solvedPosition))
-                {
-                    var solvedTile = solvedTiles[solvedPosition];
-
-                    var solvedEdge = solvedTile.GetEdge(oppositeSide);
-
-                    if (!edgesMatch(testingEdge, solvedEdge))
-                    {
-                        return false;
-                    }
-                }
+                populateGrid(grid, tileCombination);
             }
-
-            return true;
         }
 
-        private Side getOppositeSide(Side side)
+        private void populateGrid(
+            OrientedTile[,] grid,
+            IList<Tile> tiles)
         {
-            return sidesClockwise[(sidesClockwise.IndexOf(side) + 2) % sidesClockwise.Count];
-        }
-
-        private IList<Point2D> getAvailableTileSpaces(IDictionary<Point2D, SolvedTile> solvedTiles)
-        {
-            var availableLocations = new List<Point2D>();
-
-            var tileLocations = solvedTiles.Keys;
-
-            foreach (var tileLocation in tileLocations)
+            var xLength = grid.GetLength(0);
+            for (int x = 0; x < xLength; x++)
             {
-                foreach (var side in sidesClockwise)
+                for (int y = 0; y < grid.GetLength(0); y++)
                 {
-                    var newLoc = getPointTouchingSide(tileLocation, side);
-
-                    if (!tileLocations.Contains(newLoc))
-                    {
-                        availableLocations.Add(newLoc);
-                    }
+                    var tile = tiles[x * xLength + y];
+                    grid[x, y] = new OrientedTile(tile, Rotation.NoRotation, Reflection.NoReflection);
                 }
             }
+        }
 
-            return availableLocations;
+        private IList<IList<Tile>> getTileCombinations(IList<Tile> tiles)
+        {
+            throw new NotImplementedException();
+        }
+
+        private OrientedTile[,] getEmptyTileGrid(IEnumerable<Tile> tiles)
+        {
+            var square = (int) Math.Sqrt(tiles.Count());
+
+            return new OrientedTile[square, square];
+        }
+
+        private OrientedTile getTile(OrientedTile[,] solvedTiles, Point2D solvedPosition)
+        {
+            if (0 <= solvedPosition.X && solvedPosition.X < solvedTiles.GetLength(0)
+              && 0 <= solvedPosition.Y && solvedPosition.Y < solvedTiles.GetLength(1))
+            {
+                return solvedTiles[solvedPosition.X, solvedPosition.Y];
+            }
+
+            return null;
         }
 
         private IDictionary<Side, Point2D> loadSideOffsets()
         {
             var sidesWithOffsets = new Dictionary<Side, Point2D>()
             {
-                { Side.Left, new Point2D(-1, 0) },
-                { Side.Up, new Point2D(0, -1) },
-                { Side.Right, new Point2D(1, 0) },
-                { Side.Down, new Point2D(0, 1) }
+                { Side.Left, new Point2D(0, -1) },
+                { Side.Up, new Point2D(-1, 0) },
+                { Side.Right, new Point2D(0, 1) },
+                { Side.Down, new Point2D(1, 0) }
             };
 
             return sidesWithOffsets;
-        }
-
-        private IList<OrientedTile> getTilePermutations(Tile tile)
-        {
-            var permutations = new List<OrientedTile>();
-
-            foreach (var rotation in rotationsClockwise)
-            {
-                foreach (var reflection in reflections)
-                {
-                    permutations.Add(new OrientedTile(
-                        tile,
-                        rotation,
-                        reflection,
-                        rotationsClockwise,
-                        sidesClockwise));
-                }
-            }
-
-            return permutations;
         }
 
         private Point2D getPointTouchingSide(
@@ -199,16 +115,15 @@ namespace advent_of_code_2020.Day20
             return edgeA != null && edgeA.Equals(edgeB);
         }
 
-        private long getCornerMultiplications(IDictionary<Point2D, SolvedTile> solvedTiles)
+        private long getCornerMultiplications(OrientedTile[,] solvedTiles)
         {
-            var min = solvedTiles.Keys.Min(point => point.X);
-            var max = solvedTiles.Keys.Max(point => point.Y);
+            var N = solvedTiles.GetLength(0);
 
             return
-                solvedTiles[new Point2D(min, min)].Id
-                * solvedTiles[new Point2D(min, max)].Id
-                * solvedTiles[new Point2D(max, min)].Id
-                * solvedTiles[new Point2D(max, max)].Id;
+                solvedTiles[0, 0].Id
+                * solvedTiles[0, N].Id
+                * solvedTiles[N, 0].Id
+                * solvedTiles[N, N].Id;
         }
     }
 }
