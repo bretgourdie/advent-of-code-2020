@@ -76,6 +76,10 @@
     <Compile Include="Day11\Point2D.cs" />
     <Compile Include="Day11\SeatStatus.cs" />
     <Compile Include="Day11\Solution.cs" />
+    <Compile Include="Day13\BusAndDeparture.cs" />
+    <Compile Include="Day13\BusDeparture.cs" />
+    <Compile Include="Day13\FlexibleBusDeparture.cs" />
+    <Compile Include="Day13\Solution.cs" />
     <Compile Include="Day14\IDecoder.cs" />
     <Compile Include="Day14\Mask.cs" />
     <Compile Include="Day14\Version1.cs" />
@@ -180,6 +184,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Day11\input.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day13\example.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day13\input.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Day14\example.txt">
