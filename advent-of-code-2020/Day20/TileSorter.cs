@@ -38,114 +38,21 @@ namespace advent_of_code_2020.Day20
             return tileDict;
         }
 
-        public long Sort(Queue<Tile> tiles)
+        public long Sort(
+            Queue<Tile> tiles,
+            IDictionary<Point2D, OrientedTile> board)
         {
-            var tilesToPermutation = loadTilesToPermutationDictionary(tiles);
-
-            var solvedTiles = new Dictionary<Point2D, SolvedTile>();
-
-            var first = tiles.Dequeue();
-
-            var solvedOrientedTile = new OrientedTile(
-                first,
-                Rotation.NoRotation,
-                Reflection.NoReflection,
-                rotationsClockwise,
-                sidesClockwise);
-
-            solvedTiles[new Point2D(0, 0)] = new SolvedTile(solvedOrientedTile);
+            if (!tiles.Any()) return getCornerMultiplications(board);
 
             while (tiles.Any())
             {
-                bool foundMatchingSide = false;
-
                 var tile = tiles.Dequeue();
-
-                var availableSpaces = getAvailableTileSpaces(solvedTiles);
-
-                for (int availableSpaceIndex = 0; !foundMatchingSide && availableSpaceIndex < availableSpaces.Count; availableSpaceIndex++)
-                {
-                    var availableSpace = availableSpaces[availableSpaceIndex];
-
-                    for (int tilePermutationIndex = 0; tilePermutationIndex < tilesToPermutation[tile].Count && !foundMatchingSide; tilePermutationIndex++)
-                    {
-                        var tilePermutation = tilesToPermutation[tile][tilePermutationIndex];
-
-                        foundMatchingSide = isMatch(
-                            tilePermutation,
-                            availableSpace,
-                            solvedTiles);
-
-                        if (foundMatchingSide)
-                        {
-                            solvedTiles[availableSpace] = new SolvedTile(tilePermutation);
-                        }
-                    }
-                }
-
-                if (!foundMatchingSide)
-                {
-                    tiles.Enqueue(tile);
-                }
             }
-
-            return getCornerMultiplications(solvedTiles);
-        }
-
-        private bool isMatch(
-            OrientedTile tile,
-            Point2D testingPosition,
-            IDictionary<Point2D, SolvedTile> solvedTiles)
-        {
-            foreach (var side in sidesClockwise)
-            {
-                var oppositeSide = getOppositeSide(side);
-
-                var testingEdge = tile.GetEdge(side);
-
-                var solvedPosition = getPointTouchingSide(testingPosition, oppositeSide);
-
-                if (solvedTiles.ContainsKey(solvedPosition))
-                {
-                    var solvedTile = solvedTiles[solvedPosition];
-
-                    var solvedEdge = solvedTile.GetEdge(oppositeSide);
-
-                    if (!edgesMatch(testingEdge, solvedEdge))
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
         }
 
         private Side getOppositeSide(Side side)
         {
             return sidesClockwise[(sidesClockwise.IndexOf(side) + 2) % sidesClockwise.Count];
-        }
-
-        private IList<Point2D> getAvailableTileSpaces(IDictionary<Point2D, SolvedTile> solvedTiles)
-        {
-            var availableLocations = new List<Point2D>();
-
-            var tileLocations = solvedTiles.Keys;
-
-            foreach (var tileLocation in tileLocations)
-            {
-                foreach (var side in sidesClockwise)
-                {
-                    var newLoc = getPointTouchingSide(tileLocation, side);
-
-                    if (!tileLocations.Contains(newLoc))
-                    {
-                        availableLocations.Add(newLoc);
-                    }
-                }
-            }
-
-            return availableLocations;
         }
 
         private IDictionary<Side, Point2D> loadSideOffsets()
@@ -199,7 +106,7 @@ namespace advent_of_code_2020.Day20
             return edgeA != null && edgeA.Equals(edgeB);
         }
 
-        private long getCornerMultiplications(IDictionary<Point2D, SolvedTile> solvedTiles)
+        private long getCornerMultiplications(IDictionary<Point2D, OrientedTile> solvedTiles)
         {
             var min = solvedTiles.Keys.Min(point => point.X);
             var max = solvedTiles.Keys.Max(point => point.Y);
