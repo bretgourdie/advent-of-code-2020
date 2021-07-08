@@ -1,27 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace advent_of_code_2020.Day20
 {
     class TileSorter
     {
-        private readonly IList<Side> sidesClockwise;
-        private readonly IList<Rotation> rotationsClockwise;
-        private readonly IList<Reflection> reflections;
         private readonly IDictionary<Side, Point2D> sideOffset;
+
+        private IDictionary<Tile, IList<OrientedTile>> tilePermutationsByTile;
 
         public TileSorter()
         {
-            sidesClockwise = new List<Side>() {Side.Left, Side.Up, Side.Right, Side.Down};
-            rotationsClockwise = new List<Rotation>()
-            {
-                Rotation.NoRotation,
-                Rotation.Clockwise90,
-                Rotation.Clockwise180,
-                Rotation.Clockwise270
-            };
-            reflections = new List<Reflection>() {Reflection.NoReflection, Reflection.Flip};
             sideOffset = loadSideOffsets();
         }
 
@@ -32,7 +23,7 @@ namespace advent_of_code_2020.Day20
 
             foreach (var tile in tiles)
             {
-                tileDict[tile] = getTilePermutations(tile);
+                tileDict[tile] = TileConversion.GetTilePermutations(tile);
             }
 
             return tileDict;
@@ -48,44 +39,26 @@ namespace advent_of_code_2020.Day20
             {
                 var tile = tiles.Dequeue();
             }
+
+            throw new NotImplementedException();
         }
 
-        private Side getOppositeSide(Side side)
+        private IList<IList<Tile>> getTileCombinations(IList<Tile> tiles)
         {
-            return sidesClockwise[(sidesClockwise.IndexOf(side) + 2) % sidesClockwise.Count];
+            throw new NotImplementedException();
         }
 
         private IDictionary<Side, Point2D> loadSideOffsets()
         {
             var sidesWithOffsets = new Dictionary<Side, Point2D>()
             {
-                { Side.Left, new Point2D(-1, 0) },
-                { Side.Up, new Point2D(0, -1) },
-                { Side.Right, new Point2D(1, 0) },
-                { Side.Down, new Point2D(0, 1) }
+                { Side.Left, new Point2D(0, -1) },
+                { Side.Up, new Point2D(-1, 0) },
+                { Side.Right, new Point2D(0, 1) },
+                { Side.Down, new Point2D(1, 0) }
             };
 
             return sidesWithOffsets;
-        }
-
-        private IList<OrientedTile> getTilePermutations(Tile tile)
-        {
-            var permutations = new List<OrientedTile>();
-
-            foreach (var rotation in rotationsClockwise)
-            {
-                foreach (var reflection in reflections)
-                {
-                    permutations.Add(new OrientedTile(
-                        tile,
-                        rotation,
-                        reflection,
-                        rotationsClockwise,
-                        sidesClockwise));
-                }
-            }
-
-            return permutations;
         }
 
         private Point2D getPointTouchingSide(
@@ -108,14 +81,7 @@ namespace advent_of_code_2020.Day20
 
         private long getCornerMultiplications(IDictionary<Point2D, OrientedTile> solvedTiles)
         {
-            var min = solvedTiles.Keys.Min(point => point.X);
-            var max = solvedTiles.Keys.Max(point => point.Y);
-
-            return
-                solvedTiles[new Point2D(min, min)].Id
-                * solvedTiles[new Point2D(min, max)].Id
-                * solvedTiles[new Point2D(max, min)].Id
-                * solvedTiles[new Point2D(max, max)].Id;
+            throw new NotImplementedException();
         }
     }
 }
