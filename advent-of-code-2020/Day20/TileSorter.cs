@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using E = advent_of_code_2020.Day20.EnumHelper;
 
 namespace advent_of_code_2020.Day20
 {
@@ -31,7 +32,10 @@ namespace advent_of_code_2020.Day20
 
         public long Sort(IEnumerable<Tile> tiles)
         {
-            throw new NotImplementedException();
+            return sort(
+                new Queue<Tile>(tiles), 
+                new Dictionary<Point2D, OrientedTile>(),
+                (int)Math.Sqrt(tiles.Count()));
         }
 
         private long sort(
@@ -47,7 +51,7 @@ namespace advent_of_code_2020.Day20
             {
                 var tile = tiles.Dequeue();
 
-                foreach (var point in getAvailablePositions(board))
+                foreach (var point in getAvailablePositions(board, dimension))
                 {
                     foreach (var orientedTile in TileConversion.GetTilePermutations(tile))
                     {
@@ -69,6 +73,8 @@ namespace advent_of_code_2020.Day20
                     }
                 }
 
+                tiles.Enqueue(tile);
+
             } while (tiles.Any() && tiles.Peek() != firstTile);
 
             return SORT_FAILURE;
@@ -79,13 +85,60 @@ namespace advent_of_code_2020.Day20
             Point2D testingPoint,
             OrientedTile testingTile)
         {
-            throw new NotImplementedException();
+            foreach (var testingSide in E.SidesClockwise)
+            {
+                var checkingPoint = getPointTouchingSide(testingPoint, testingSide);
+
+                if (!board.ContainsKey(checkingPoint)) continue;
+
+                var checkingSide = SideConversion.GetOppositeSide(testingSide);
+                var checkingTile = board[checkingPoint];
+
+                if (!edgesMatch(
+                    testingTile.GetEdge(testingSide),
+                    checkingTile.GetEdge(checkingSide))
+                    )
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private IEnumerable<Point2D> getAvailablePositions(
-            IDictionary<Point2D, OrientedTile> board)
+            IDictionary<Point2D, OrientedTile> board,
+            int dimension)
         {
-            throw new NotImplementedException();
+            if (!board.Any())
+            {
+                return new[] {new Point2D(dimension / 2, dimension / 2)};
+            }
+
+            var positions = new List<Point2D>();
+
+            foreach (var pointAndTile in board)
+            {
+                var point = pointAndTile.Key;
+                foreach (var offset in sideOffset.Values)
+                {
+                    positions.Add(
+                        new Point2D(
+                            point.X + offset.X,
+                            point.Y + offset.Y));
+                }
+            }
+
+            positions.RemoveAll(point =>
+                point.X < 0
+                || point.Y < 0
+                || point.X >= dimension
+                || point.Y >= dimension);
+
+            positions.RemoveAll(point =>
+                board.Keys.Contains(point));
+
+            return positions;
         }
 
         private IDictionary<Side, Point2D> loadSideOffsets()
