@@ -1,83 +1,59 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace advent_of_code_2020.Day20
 {
     class Tile
     {
         public readonly int Id;
-        public readonly int Length;
-        private readonly char[,] piece;
+        public readonly string[] Sides;
 
         public Tile(IList<string> tileChunk)
         {
             var header = tileChunk.First();
             var split = header.Split(' ');
             Id = int.Parse(split[1].Replace(":", ""));
-
-            piece = loadPiece(tileChunk.Skip(1).ToList());
-            Length = piece.GetLength(0);
+            Sides = getSides(tileChunk.Skip(1).ToList());
         }
 
-        private char[,] loadPiece(IList<string> tileChunk)
+        private string[] getSides(IList<string> lines)
         {
-            int xLength = tileChunk.Count;
-            int yLength = tileChunk.First().Length;
+            var sides = new string[4];
 
-            var piece = new char[xLength, yLength];
+            var length = lines.Count;
 
-            for (int x = 0; x < xLength; x++)
+            var xStarts = new[] {0, length - 1, length - 1, 0};
+            var xEnds = new[] {length - 1, length - 1, 0, 0};
+            var yStarts = new[] {0, 0, length - 1, length - 1};
+            var yEnds = new[] {0, length - 1, length - 1, 0};
+            var xAdds = new[] {1, 0, -1, 0};
+            var yAdds = new[] {0, 1, 0, -1};
+
+            for (int ii = 0; ii < 4; ii++)
             {
-                for (int y = 0; y < yLength; y++)
+                var xStart = xStarts[ii];
+                var yStart = yStarts[ii];
+                var xEnd = xEnds[ii];
+                var yEnd = yEnds[ii];
+                var xAdd = xAdds[ii];
+                var yAdd = yAdds[ii];
+
+                var side = new StringBuilder();
+
+                for (int x = xStart, y = yStart;
+                    Math.Min(xStart, xEnd) <= x && x <= Math.Max(xStart, xEnd)
+                                                && Math.Min(yStart, yEnd) <= y && y <= Math.Max(yStart, yEnd);
+                    x += xAdd, y += yAdd)
                 {
-                    piece[x, y] = tileChunk[x][y];
+                    side.Append(lines[y][x]);
                 }
+
+                sides[ii] = side.ToString();
             }
 
-            return piece;
-        }
-
-        public string GetEdge(
-            Side side)
-        {
-            var chars = new List<char>();
-
-            var start = getStart(side);
-            var vector = getVector(side);
-
-            for (
-                int x = start.X, y = start.Y;
-                x < piece.GetLength(0) && y < piece.GetLength(1);
-                x += vector.X, y += vector.Y)
-            {
-                chars.Add(piece[x, y]);
-            }
-
-            return String.Concat(chars);
-        }
-
-        private Point2D getStart(Side side)
-        {
-            switch (side)
-            {
-                case Side.Left: case Side.Up: return new Point2D(0, 0);
-                case Side.Right: return new Point2D(0, Length - 1);
-                case Side.Down: return new Point2D(Length - 1, 0);
-            }
-
-            throw new ArgumentException();
-        }
-
-        private Point2D getVector(Side side)
-        {
-            switch (side)
-            {
-                case Side.Up: case Side.Down: return new Point2D(0, 1);
-                case Side.Left: case Side.Right: return new Point2D(1, 0);
-            }
-
-            throw new ArgumentException();
+            return sides;
         }
     }
 }

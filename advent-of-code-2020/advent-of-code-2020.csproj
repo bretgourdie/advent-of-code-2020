@@ -113,14 +113,6 @@
     <Compile Include="Day19\Rule.cs" />
     <Compile Include="Day19\RuleSet.cs" />
     <Compile Include="Day19\Solution.cs" />
-    <Compile Include="Day20\EnumHelper.cs" />
-    <Compile Include="Day20\OrientedTile.cs" />
-    <Compile Include="Day20\Point2D.cs" />
-    <Compile Include="Day20\Reflection.cs" />
-    <Compile Include="Day20\Rotation.cs" />
-    <Compile Include="Day20\Side.cs" />
-    <Compile Include="Day20\SideConversion.cs" />
-    <Compile Include="Day20\TileConversion.cs" />
     <Compile Include="Day20\Solution.cs" />
     <Compile Include="Day20\Tile.cs" />
     <Compile Include="Day20\TileSorter.cs" />

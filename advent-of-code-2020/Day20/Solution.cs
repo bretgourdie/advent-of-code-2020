@@ -8,23 +8,20 @@ namespace advent_of_code_2020.Day20
     {
         protected override void performWorkForProblem1(IList<string> inputData)
         {
-            var cornerProduct = new TileSorter().Sort(loadTiles(inputData));
+            var cornerProduct = new TileSorter().GetCorners(loadTiles(inputData).ToList());
 
             Console.WriteLine($"The product of the corner tiles is {cornerProduct}");
         }
 
-        private Queue<Tile> loadTiles(IList<string> inputData)
+        private IEnumerable<Tile> loadTiles(IList<string> inputData)
         {
-            var tiles = new Queue<Tile>();
             const int tileLength = 12;
 
             for (int ii = 0; ii < inputData.Count; ii += tileLength)
             {
                 var tileChunk = inputData.Skip(ii).Take(tileLength - 1).ToList();
-                tiles.Enqueue(new Tile(tileChunk));
+                yield return new Tile(tileChunk);
             }
-
-            return tiles;
         }
 
         protected override void performWorkForProblem2(IList<string> inputData)
