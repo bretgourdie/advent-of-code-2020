@@ -26,7 +26,7 @@ namespace advent_of_code_2020.Day20
 
         protected override void performWorkForProblem2(IList<string> inputData)
         {
-            throw new NotImplementedException();
+            var solvedPuzzle = new TileSorter().solvePuzzle(loadTiles(inputData).ToList());
         }
     }
 }

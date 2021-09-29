@@ -12,6 +12,11 @@ namespace advent_of_code_2020.Day20
                 getCorners(tiles));
         }
 
+        public IDictionary<Point2D, Tile> solvePuzzle(IList<Tile> tiles)
+        {
+            throw new NotImplementedException();
+        }
+
         private IEnumerable<Tile> getCorners(IList<Tile> tiles)
         {
             var matchesByTile = determineMatchesByTile(tiles);
@@ -56,9 +61,9 @@ namespace advent_of_code_2020.Day20
             Tile b,
             out bool tileAFlipped)
         {
-            foreach (var aSide in a.Sides)
+            foreach (var aSide in a.Sides.Values)
             {
-                foreach (var bSide in b.Sides)
+                foreach (var bSide in b.Sides.Values)
                 {
                     if (aSide.Equals(bSide))
                     {

@@ -7,8 +7,10 @@ namespace advent_of_code_2020.Day20
 {
     class Tile
     {
+        private static Side[] ALL_SIDES = new[] {Side.North, Side.East, Side.South, Side.West};
         public readonly int Id;
-        public readonly string[] Sides;
+
+        public readonly IDictionary<Side, string> Sides;
 
         public Tile(IList<string> tileChunk)
         {
@@ -18,9 +20,9 @@ namespace advent_of_code_2020.Day20
             Sides = getSides(tileChunk.Skip(1).ToList());
         }
 
-        private string[] getSides(IList<string> lines)
+        private IDictionary<Side, string> getSides(IList<string> lines)
         {
-            var sides = new string[4];
+            var sides = new Dictionary<Side, string>();
 
             var length = lines.Count;
 
@@ -50,7 +52,7 @@ namespace advent_of_code_2020.Day20
                     side.Append(lines[y][x]);
                 }
 
-                sides[ii] = side.ToString();
+                sides[ALL_SIDES[ii]] = side.ToString();
             }
 
             return sides;
