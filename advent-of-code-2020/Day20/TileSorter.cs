@@ -41,7 +41,7 @@ namespace advent_of_code_2020.Day20
 
                     var testingTile = tiles[testingTileIndex];
 
-                    if (oneSideMatches(checkingTile, testingTile))
+                    if (oneSideMatches(checkingTile, testingTile, out bool tileAFlipped))
                     {
                         matchesByTile[checkingTile] += 1;
                     }
@@ -53,7 +53,8 @@ namespace advent_of_code_2020.Day20
 
         private bool oneSideMatches(
             Tile a,
-            Tile b)
+            Tile b,
+            out bool tileAFlipped)
         {
             foreach (var aSide in a.Sides)
             {
@@ -61,6 +62,7 @@ namespace advent_of_code_2020.Day20
                 {
                     if (aSide.Equals(bSide))
                     {
+                        tileAFlipped = false;
                         return true;
                     }
 
@@ -68,11 +70,13 @@ namespace advent_of_code_2020.Day20
 
                     if (reversedASide.Equals(bSide))
                     {
+                        tileAFlipped = true;
                         return true;
                     }
                 }
             }
 
+            tileAFlipped = false;
             return false;
         }
 
