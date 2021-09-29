@@ -8,7 +8,7 @@ namespace advent_of_code_2020.Day20
     {
         protected override void performWorkForProblem1(IList<string> inputData)
         {
-            var cornerProduct = new TileSorter().GetCorners(loadTiles(inputData).ToList());
+            var cornerProduct = new TileSorter().GetCornerProduct(loadTiles(inputData).ToList());
 
             Console.WriteLine($"The product of the corner tiles is {cornerProduct}");
         }

@@ -6,13 +6,19 @@ namespace advent_of_code_2020.Day20
 {
     class TileSorter
     {
-        public long GetCorners(IList<Tile> tiles)
+        public long GetCornerProduct(IList<Tile> tiles)
+        {
+            return cornerProduct(
+                getCorners(tiles));
+        }
+
+        private IEnumerable<Tile> getCorners(IList<Tile> tiles)
         {
             var matchesByTile = determineMatchesByTile(tiles);
 
             var cornerPieces = determineCornerPieces(matchesByTile);
 
-            return cornerProduct(cornerPieces);
+            return cornerPieces;
         }
 
         private IDictionary<Tile, int> determineMatchesByTile(
