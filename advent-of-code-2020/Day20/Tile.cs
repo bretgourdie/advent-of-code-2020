@@ -26,14 +26,14 @@ namespace advent_of_code_2020.Day20
 
             var length = lines.Count;
 
-            var xStarts = new[] {0, length - 1, length - 1, 0};
-            var xEnds = new[] {length - 1, length - 1, 0, 0};
-            var yStarts = new[] {0, 0, length - 1, length - 1};
-            var yEnds = new[] {0, length - 1, length - 1, 0};
-            var xAdds = new[] {1, 0, -1, 0};
-            var yAdds = new[] {0, 1, 0, -1};
+            var xStarts = new[] {0, length - 1, 0, 0};
+            var xEnds = new[] {length - 1, length - 1, length - 1, 0};
+            var yStarts = new[] {0, 0, length - 1, 0};
+            var yEnds = new[] {0, length - 1, length - 1, length - 1};
+            var xAdds = new[] {1, 0, 1, 0};
+            var yAdds = new[] {0, 1, 0, 1};
 
-            for (int ii = 0; ii < 4; ii++)
+            for (int ii = 0; ii < ALL_SIDES.Length; ii++)
             {
                 var xStart = xStarts[ii];
                 var yStart = yStarts[ii];
