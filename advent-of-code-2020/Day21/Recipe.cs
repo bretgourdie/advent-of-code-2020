@@ -5,21 +5,21 @@ namespace advent_of_code_2020.Day21
 {
     class Recipe
     {
-        public readonly string[] Ingredients;
-        public readonly string[] Allergens;
+        public readonly HashSet<string> Ingredients;
+        public readonly List<string> Allergens;
         public Recipe(string line)
         {
             var theSplit = line.Split(new [] {" ("}, StringSplitOptions.RemoveEmptyEntries);
 
-            Ingredients = theSplit[0].Split(' ');
+            Ingredients = new HashSet<string>(theSplit[0].Split(' '));
             if (theSplit.Length > 1)
             {
-                Allergens = handleAllergens(theSplit[1]);
+                Allergens = new List<string>(handleAllergens(theSplit[1]));
             }
 
             else
             {
-                Allergens = new string[0];
+                Allergens = new List<string>();
             }
         }
 
