@@ -23,6 +23,12 @@ namespace advent_of_code_2020.Day21
             }
         }
 
+        public Recipe(IEnumerable<string> ingredients, IEnumerable<string> allergens)
+        {
+            Ingredients = new HashSet<string>(ingredients);
+            Allergens = new List<string>(allergens);
+        }
+
         private string[] handleAllergens(string allergenSegment)
         {
             var list = new List<string>();

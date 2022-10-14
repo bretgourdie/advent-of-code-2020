@@ -76,6 +76,64 @@ namespace advent_of_code_2020.Day21
 
         protected override void performWorkForProblem2(IList<string> inputData)
         {
+            var recipes = getRecipes(inputData);
+            var nonAllergenicIngredients = getNonAllergenicIngredients(recipes);
+            var ingredientToAllergen = getIngredientsByAllergen(recipes, nonAllergenicIngredients);
+
+            var canonicalDangerousIngredientList = getCanonicalDangerousIngredientList(ingredientToAllergen);
+
+            Console.WriteLine(
+                $"Canonical dangerous ingredient list is \"{canonicalDangerousIngredientList}\"");
+        }
+
+        private IDictionary<string, string> getIngredientsByAllergen(
+            IList<Recipe> recipes,
+            IEnumerable<string> nonAllergenicIngredients)
+        {
+            var recipesWithOnlyAllergens = getRecipesWithOnlyAllergens(recipes, nonAllergenicIngredients);
+
+            var allergens = recipes.SelectMany(x => x.Allergens).Distinct();
+
+            var ingredientToAllergen = new Dictionary<string, string>();
+
+            while (ingredientToAllergen.Count < allergens.Count())
+            {
+                foreach (var recipe in recipesWithOnlyAllergens)
+                {
+                    if (recipe.Allergens.Count == 1 && recipe.Ingredients.Count == 1)
+                    {
+                        ingredientToAllergen[recipe.Ingredients.Single()] = recipe.Allergens.Single();
+
+                        // remove ingredients
+                    }
+                }
+            }
+
+            throw new NotImplementedException();
+        }
+
+        private IList<Recipe> getRecipesWithOnlyAllergens(
+            IList<Recipe> recipes,
+            IEnumerable<string> nonAllergenicIngredients)
+        {
+            var recipesWithOnlyAllergenics = new List<Recipe>();
+
+            foreach (var recipe in recipes)
+            {
+                var onlyAllergenicIngredients = recipe.Ingredients.Except(nonAllergenicIngredients);
+
+                var onlyAllergenicRecipe = new Recipe(
+                    onlyAllergenicIngredients,
+                    recipe.Allergens);
+
+                recipesWithOnlyAllergenics.Add(onlyAllergenicRecipe);
+            }
+
+            return recipesWithOnlyAllergenics;
+        }
+
+        private string getCanonicalDangerousIngredientList(IDictionary<string, string> ingredientToAllergen)
+        {
             throw new NotImplementedException();
         }
 
