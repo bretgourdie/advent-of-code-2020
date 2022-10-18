@@ -92,19 +92,22 @@ namespace advent_of_code_2020.Day21
         {
             var recipesWithOnlyAllergens = getRecipesWithOnlyAllergens(recipes, nonAllergenicIngredients);
 
-            var allergens = recipes.SelectMany(x => x.Allergens).Distinct();
+            var allergenToIngredients = new Dictionary<string, HashSet<string>>();
 
-            var ingredientToAllergen = new Dictionary<string, string>();
-
-            while (ingredientToAllergen.Count < allergens.Count())
+            foreach (var recipe in recipesWithOnlyAllergens)
             {
-                foreach (var recipe in recipesWithOnlyAllergens)
+                foreach (var allergen in recipe.Allergens)
                 {
-                    if (recipe.Allergens.Count == 1 && recipe.Ingredients.Count == 1)
+                    if (!allergenToIngredients.ContainsKey(allergen))
                     {
-                        ingredientToAllergen[recipe.Ingredients.Single()] = recipe.Allergens.Single();
+                        allergenToIngredients[allergen] = new HashSet<string>(recipe.Ingredients);
+                    }
 
-                        // remove ingredients
+                    else
+                    {
+                        allergenToIngredients[allergen] =
+                            new HashSet<string>(
+                                allergenToIngredients[allergen].Except(recipe.Ingredients));
                     }
                 }
             }

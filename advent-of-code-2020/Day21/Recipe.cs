@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace advent_of_code_2020.Day21
 {
     class Recipe
     {
-        public readonly HashSet<string> Ingredients;
-        public readonly List<string> Allergens;
+        public HashSet<string> Ingredients;
+        public List<string> Allergens;
         public Recipe(string line)
         {
             var theSplit = line.Split(new [] {" ("}, StringSplitOptions.RemoveEmptyEntries);
@@ -27,6 +28,16 @@ namespace advent_of_code_2020.Day21
         {
             Ingredients = new HashSet<string>(ingredients);
             Allergens = new List<string>(allergens);
+        }
+
+        public void RemoveIngredients(IEnumerable<string> ingredientsToRemove)
+        {
+            Ingredients = new HashSet<string>(Ingredients.Except(ingredientsToRemove));
+        }
+
+        public void RemoveAllergens(IEnumerable<string> allergensToRemove)
+        {
+            Allergens = new List<string>(Allergens.Except(allergensToRemove));
         }
 
         private string[] handleAllergens(string allergenSegment)
