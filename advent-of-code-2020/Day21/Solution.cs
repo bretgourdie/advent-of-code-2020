@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Security.Policy;
 
 namespace advent_of_code_2020.Day21
 {
@@ -92,27 +95,102 @@ namespace advent_of_code_2020.Day21
         {
             var recipesWithOnlyAllergens = getRecipesWithOnlyAllergens(recipes, nonAllergenicIngredients);
 
-            var allergenToIngredients = new Dictionary<string, HashSet<string>>();
+            var rules = getAllergenRules(recipesWithOnlyAllergens);
 
-            foreach (var recipe in recipesWithOnlyAllergens)
+            var allergens = recipesWithOnlyAllergens.SelectMany(x => x.Allergens).Distinct().ToList();
+
+            var ingredients = recipesWithOnlyAllergens.SelectMany(x => x.Ingredients).Distinct().ToList();
+
+            var allergenAssignments = getAllergenAssignments(
+                rules,
+                allergens,
+                ingredients,
+                new Dictionary<string, string>());
+
+            throw new NotImplementedException();
+        }
+
+        private IDictionary<string, string> getAllergenAssignments(
+            IDictionary<IEnumerable<string>, IEnumerable<string>> rules,
+            IList<string> allergens,
+            IList<string> allergenicIngredients,
+            IDictionary<string, string> allergenAssignments)
+        {
+            while (allergenAssignments.Count < allergens.Count)
             {
-                foreach (var allergen in recipe.Allergens)
+                if (!allergenAssignments.ContainsKey(allergen))
                 {
-                    if (!allergenToIngredients.ContainsKey(allergen))
+                    var availableIngredients =
+                        allergenicIngredients.Where(x => !allergenAssignments.Values.Contains(x))
+                            .ToList();
+                    foreach (var ingredient in availableIngredients)
                     {
-                        allergenToIngredients[allergen] = new HashSet<string>(recipe.Ingredients);
-                    }
+                        if (assignmentWorks(allergen, ingredient, rules))
+                        {
+                            allergenAssignments[allergen] = ingredient;
 
-                    else
-                    {
-                        allergenToIngredients[allergen] =
-                            new HashSet<string>(
-                                allergenToIngredients[allergen].Except(recipe.Ingredients));
+                            var returnedAssignment = getAllergenAssignments(
+                                rules,
+                                allergens,
+                                allergenicIngredients,
+                                allergenAssignments);
+
+                            if (returnedAssignment == null)
+                            {
+                                allergenAssignments.Remove(allergen);
+                            }
+                        }
                     }
                 }
             }
 
-            throw new NotImplementedException();
+            return allergenAssignments;
+        }
+
+        private bool assignmentWorks(
+            string allergen,
+            string ingredient,
+            IDictionary<IEnumerable<string>, IEnumerable<string>> rules)
+        {
+            foreach (var rule in rules)
+            {
+                if (rule.Key.Contains(allergen))
+                {
+                    if (!rule.Value.Contains(ingredient))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        private static IDictionary<IEnumerable<string>, IEnumerable<string>> getAllergenRules(
+            IList<Recipe> recipesWithOnlyAllergens)
+        {
+            var allergensToIngredientsRules = new Dictionary<HashSet<string>, HashSet<string>>();
+
+            foreach (var recipe in recipesWithOnlyAllergens)
+            {
+                var allergens = new HashSet<string>(recipe.Allergens);
+                var ingredients = new HashSet<string>(recipe.Ingredients);
+
+                if (allergensToIngredientsRules.ContainsKey(allergens))
+                {
+                    allergensToIngredientsRules[allergens] =
+                        new HashSet<string>(
+                            allergensToIngredientsRules[allergens].Intersect(ingredients)
+                        );
+                }
+
+                else
+                {
+                    allergensToIngredientsRules[allergens] = ingredients;
+                }
+            }
+
+            return allergensToIngredientsRules;
         }
 
         private IList<Recipe> getRecipesWithOnlyAllergens(
