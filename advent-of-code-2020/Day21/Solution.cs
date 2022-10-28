@@ -104,47 +104,45 @@ namespace advent_of_code_2020.Day21
             var allergenAssignments = getAllergenAssignments(
                 rules,
                 allergens,
-                ingredients,
-                new Dictionary<string, string>());
+                ingredients);
 
-            throw new NotImplementedException();
+            return allergenAssignments;
         }
 
         private IDictionary<string, string> getAllergenAssignments(
             IDictionary<IEnumerable<string>, IEnumerable<string>> rules,
             IList<string> allergens,
-            IList<string> allergenicIngredients,
-            IDictionary<string, string> allergenAssignments)
+            IList<string> allergenicIngredients)
         {
-            while (allergenAssignments.Count < allergens.Count)
+            foreach (var allergen in allergens)
             {
-                if (!allergenAssignments.ContainsKey(allergen))
+                foreach (var ingredient in allergenicIngredients)
                 {
-                    var availableIngredients =
-                        allergenicIngredients.Where(x => !allergenAssignments.Values.Contains(x))
-                            .ToList();
-                    foreach (var ingredient in availableIngredients)
+                    if (assignmentWorks(allergen, ingredient, rules))
                     {
-                        if (assignmentWorks(allergen, ingredient, rules))
+                        var allergensMinusCurrent = allergens.Where(x => x != allergen).ToList();
+                        var ingredientsMinusCurrent = allergenicIngredients.Where(x => x != ingredient).ToList();
+
+                        if (allergensMinusCurrent.Count == 0 && ingredientsMinusCurrent.Count == 0)
                         {
-                            allergenAssignments[allergen] = ingredient;
+                            return new Dictionary<string, string>() { {allergen, ingredient} };
+                        }
 
-                            var returnedAssignment = getAllergenAssignments(
-                                rules,
-                                allergens,
-                                allergenicIngredients,
-                                allergenAssignments);
+                        else
+                        {
+                            var otherAssignments = getAllergenAssignments(rules, allergensMinusCurrent, ingredientsMinusCurrent);
 
-                            if (returnedAssignment == null)
+                            if (otherAssignments != null)
                             {
-                                allergenAssignments.Remove(allergen);
+                                otherAssignments[allergen] = ingredient;
+                                return otherAssignments;
                             }
                         }
                     }
                 }
             }
 
-            return allergenAssignments;
+            return null;
         }
 
         private bool assignmentWorks(
@@ -190,7 +188,13 @@ namespace advent_of_code_2020.Day21
                 }
             }
 
-            return allergensToIngredientsRules;
+            var rulesToIEnumerables = new Dictionary<IEnumerable<string>, IEnumerable<string>>();
+            foreach (var rule in allergensToIngredientsRules)
+            {
+                rulesToIEnumerables.Add(rule.Key, rule.Value);
+            }
+
+            return rulesToIEnumerables;
         }
 
         private IList<Recipe> getRecipesWithOnlyAllergens(
@@ -215,7 +219,12 @@ namespace advent_of_code_2020.Day21
 
         private string getCanonicalDangerousIngredientList(IDictionary<string, string> ingredientToAllergen)
         {
-            throw new NotImplementedException();
+            return
+                String.Join(",",
+                    ingredientToAllergen
+                        .OrderBy(x => x.Key)
+                        .Select(x => x.Value)
+                );
         }
 
         private IEnumerable<string> getAllIngredients(IEnumerable<Recipe> recipes)
