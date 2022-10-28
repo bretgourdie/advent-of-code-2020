@@ -22,7 +22,7 @@ namespace advent_of_code_2020.Day21
         }
 
         private int countNonAllergenicIngredientsUsedInRecipes(
-            IList<Recipe> recipes,
+            IEnumerable<Recipe> recipes,
             IEnumerable<string> nonAllergenicIngredients)
         {
             int count = 0;
@@ -41,18 +41,14 @@ namespace advent_of_code_2020.Day21
             return count;
         }
 
-        private IList<Recipe> getRecipes(IList<string> inputData)
+        private IEnumerable<Recipe> getRecipes(IList<string> inputData)
         {
-            var recipes = new List<Recipe>();
-            foreach (var line in inputData)
-            {
-                recipes.Add(new Recipe(line));
-            }
-
-            return recipes;
+            return inputData.Select(
+                line => new Recipe(line)
+            );
         }
 
-        private IEnumerable<string> getNonAllergenicIngredients(IList<Recipe> recipes)
+        private IEnumerable<string> getNonAllergenicIngredients(IEnumerable<Recipe> recipes)
         {
             var allergens = recipes.SelectMany(x => x.Allergens).Distinct();
 
@@ -90,7 +86,7 @@ namespace advent_of_code_2020.Day21
         }
 
         private IDictionary<string, string> getIngredientsByAllergen(
-            IList<Recipe> recipes,
+            IEnumerable<Recipe> recipes,
             IEnumerable<string> nonAllergenicIngredients)
         {
             var recipesWithOnlyAllergens = getRecipesWithOnlyAllergens(recipes, nonAllergenicIngredients);
@@ -111,8 +107,8 @@ namespace advent_of_code_2020.Day21
 
         private IDictionary<string, string> getAllergenAssignments(
             IDictionary<IEnumerable<string>, IEnumerable<string>> rules,
-            IList<string> allergens,
-            IList<string> allergenicIngredients)
+            IEnumerable<string> allergens,
+            IEnumerable<string> allergenicIngredients)
         {
             foreach (var allergen in allergens)
             {
@@ -120,10 +116,10 @@ namespace advent_of_code_2020.Day21
                 {
                     if (assignmentWorks(allergen, ingredient, rules))
                     {
-                        var allergensMinusCurrent = allergens.Where(x => x != allergen).ToList();
-                        var ingredientsMinusCurrent = allergenicIngredients.Where(x => x != ingredient).ToList();
+                        var allergensMinusCurrent = allergens.Where(x => x != allergen);
+                        var ingredientsMinusCurrent = allergenicIngredients.Where(x => x != ingredient);
 
-                        if (allergensMinusCurrent.Count == 0 && ingredientsMinusCurrent.Count == 0)
+                        if (!allergensMinusCurrent.Any() && !ingredientsMinusCurrent.Any())
                         {
                             return new Dictionary<string, string>() { {allergen, ingredient} };
                         }
@@ -150,22 +146,15 @@ namespace advent_of_code_2020.Day21
             string ingredient,
             IDictionary<IEnumerable<string>, IEnumerable<string>> rules)
         {
-            foreach (var rule in rules)
-            {
-                if (rule.Key.Contains(allergen))
-                {
-                    if (!rule.Value.Contains(ingredient))
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
+            return rules.All(
+                x =>
+                    !x.Key.Contains(allergen)
+                    || (x.Key.Contains(allergen) && x.Value.Contains(ingredient))
+            );
         }
 
         private static IDictionary<IEnumerable<string>, IEnumerable<string>> getAllergenRules(
-            IList<Recipe> recipesWithOnlyAllergens)
+            IEnumerable<Recipe> recipesWithOnlyAllergens)
         {
             var allergensToIngredientsRules = new Dictionary<HashSet<string>, HashSet<string>>();
 
@@ -197,24 +186,15 @@ namespace advent_of_code_2020.Day21
             return rulesToIEnumerables;
         }
 
-        private IList<Recipe> getRecipesWithOnlyAllergens(
-            IList<Recipe> recipes,
+        private IEnumerable<Recipe> getRecipesWithOnlyAllergens(
+            IEnumerable<Recipe> recipes,
             IEnumerable<string> nonAllergenicIngredients)
         {
-            var recipesWithOnlyAllergenics = new List<Recipe>();
-
-            foreach (var recipe in recipes)
-            {
-                var onlyAllergenicIngredients = recipe.Ingredients.Except(nonAllergenicIngredients);
-
-                var onlyAllergenicRecipe = new Recipe(
-                    onlyAllergenicIngredients,
-                    recipe.Allergens);
-
-                recipesWithOnlyAllergenics.Add(onlyAllergenicRecipe);
-            }
-
-            return recipesWithOnlyAllergenics;
+            return recipes
+                .Select(recipe => new Recipe(
+                    recipe.Ingredients.Except(nonAllergenicIngredients),
+                    recipe.Allergens)
+                );
         }
 
         private string getCanonicalDangerousIngredientList(IDictionary<string, string> ingredientToAllergen)
