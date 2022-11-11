@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace advent_of_code_2020.Day12
 {
-    public class Command
+    public class ShipCommand : ICommand
     {
         private readonly char commandLetter;
         private readonly int commandNumber;
@@ -16,7 +16,7 @@ namespace advent_of_code_2020.Day12
         private const char Right = 'R';
         private const char Forward = 'F';
 
-        private IList<Direction> clockwiseDirections = new List<Direction>()
+        private readonly IList<Direction> clockwiseDirections = new List<Direction>()
         {
             Direction.North,
             Direction.East,
@@ -24,41 +24,37 @@ namespace advent_of_code_2020.Day12
             Direction.West
         };
 
-        public Command(string input)
+        public ShipCommand(string input)
         {
             commandLetter = input[0];
-            commandNumber = Int32.Parse(input.Substring(1));
+            commandNumber = int.Parse(input.Substring(1));
         }
 
-        public Resolution Resolve(int x, int y, Direction direction)
+        public Transform Resolve(Transform transform)
         {
+            var t = transform as ShipTransform;
             switch (commandLetter)
             {
                 case North:
-                    y += commandNumber;
-                    break;
+                    return new ShipTransform(t.X, t.Y + commandNumber, t.Direction);
                 case South:
-                    y -= commandNumber;
-                    break;
+                    return new ShipTransform(t.X, t.Y - commandNumber, t.Direction);
                 case East:
-                    x += commandNumber;
-                    break;
+                    return new ShipTransform(t.X + commandNumber, t.Y, t.Direction);
                 case West:
-                    x -= commandNumber;
-                    break;
+                    return new ShipTransform(t.X - commandNumber, t.Y, t.Direction);
                 case Left:
-                    direction = resolveDirection(commandNumber, -1, direction);
-                    break;
+                    return new ShipTransform(t.X, t.Y, resolveDirection(commandNumber, -1, t.Direction));
                 case Right:
-                    direction = resolveDirection(commandNumber, 1, direction);
-                    break;
+                    return new ShipTransform(t.X, t.Y, resolveDirection(commandNumber, 1, t.Direction));
                 case Forward:
-                    x = resolveForwardX(x, commandNumber, direction);
-                    y = resolveForwardY(y, commandNumber, direction);
-                    break;
+                    return new ShipTransform(
+                        resolveForwardX(t.X, commandNumber, t.Direction),
+                        resolveForwardY(t.Y, commandNumber, t.Direction),
+                        t.Direction);
+                default:
+                    throw new NotImplementedException();
             }
-
-            return new Resolution(x, y, direction);
         }
 
         private int resolveForwardX(int x, int forwardSpaces, Direction direction)

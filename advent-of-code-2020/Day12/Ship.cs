@@ -4,24 +4,36 @@ namespace advent_of_code_2020.Day12
 {
     public class Ship
     {
-        private int x;
-        private int y;
-        private Direction direction;
+        private readonly Waypoint waypoint;
 
-        public Ship()
+        private ShipTransform shipTransform;
+
+        public Ship(Waypoint waypoint)
         {
-            direction = Direction.East;
+            shipTransform = new ShipTransform(0, 0, Direction.East);
+            this.waypoint = waypoint;
         }
 
-        public void PerformAction(Command command)
+        public void PerformAction(ICommand command)
         {
-            var resolution = command.Resolve(x, y, direction);
+            if (command is ShipCommand)
+            {
+                PerformAction((ShipCommand)command);
+            }
 
-            x = resolution.X;
-            y = resolution.Y;
-            direction = resolution.Direction;
+            else if (command is WaypointCommand)
+            {
+                waypoint.PerformAction((WaypointCommand)command);
+            }
         }
 
-        public int ManhattanDistance() => Math.Abs(x) + Math.Abs(y);
+        public void PerformAction(ShipCommand command)
+        {
+            var newTransform = command.Resolve(shipTransform);
+
+            shipTransform = newTransform as ShipTransform;
+        }
+
+        public int ManhattanDistance() => Math.Abs(shipTransform.X) + Math.Abs(shipTransform.Y);
     }
 }
