@@ -3,5 +3,6 @@
     public interface ICommand
     {
         Transform Resolve(Transform transform);
+        bool MovesShip();
     }
 }

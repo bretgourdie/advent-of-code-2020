@@ -15,14 +15,14 @@
 
         protected override void navigate(ICommand command)
         {
-            if (command is MovementCommand || command is WaypointRotateCommand)
-            {
-                waypoint = command.Resolve(waypoint);
-            }
-
-            else if (command is ForwardMoveCommand)
+            if (command.MovesShip())
             {
                 ship = command.Resolve(ship);
+            }
+
+            else
+            {
+                waypoint = command.Resolve(waypoint);
             }
         }
 
@@ -31,9 +31,9 @@
             return new WaypointRotateCommand(degrees, rotationDirection);
         }
 
-        protected override ForwardMoveCommand parseForwardMove(int times)
+        protected override MovementCommand parseForwardMove(int times)
         {
-            return new ForwardMoveCommand(waypoint, times);
+            return new MovementCommand(waypoint, times);
         }
 
         public override int GetManhattanDistance()

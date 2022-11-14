@@ -42,5 +42,7 @@ namespace advent_of_code_2020.Day12
                 t.Y,
                 theseDirections[boundNewIndex]);
         }
+
+        public bool MovesShip() => false;
     }
 }

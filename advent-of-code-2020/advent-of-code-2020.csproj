@@ -85,7 +85,6 @@
     <Compile Include="Day12\Transform.cs" />
     <Compile Include="Day12\Direction.cs" />
     <Compile Include="Day12\Solution.cs" />
-    <Compile Include="Day12\ForwardMoveCommand.cs" />
     <Compile Include="Day12\WaypointNavigation.cs" />
     <Compile Include="Day12\WaypointRotateCommand.cs" />
     <Compile Include="Day13\BusAndDeparture.cs" />

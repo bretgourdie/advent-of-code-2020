@@ -38,6 +38,8 @@ namespace advent_of_code_2020.Day12
                 t.Direction);
         }
 
+        public bool MovesShip() => false;
+
         private void rotate(
             ref int left,
             ref int right)

@@ -5,18 +5,24 @@ namespace advent_of_code_2020.Day12
     public class MovementCommand : ICommand
     {
         private readonly Transform movement;
+        private readonly int times = 1;
+        private bool movesWaypoint;
 
         public MovementCommand(
             int amount,
             Direction direction)
         {
             movement = convertDirectionToMovement(amount, direction);
+            movesWaypoint = true;
         }
 
         public MovementCommand(
-            Transform waypoint)
+            Transform waypoint,
+            int times)
         {
             movement = waypoint;
+            this.times = times;
+            movesWaypoint = false;
         }
 
         private Transform convertDirectionToMovement(
@@ -40,10 +46,20 @@ namespace advent_of_code_2020.Day12
 
         public Transform Resolve(Transform t)
         {
-            return new Transform(
-                t.X + movement.X,
-                t.Y + movement.Y,
-                t.Direction);
+            for (int ii = 0; ii < times; ii++)
+            {
+                t = new Transform(
+                    t.X + movement.X,
+                    t.Y + movement.Y,
+                    t.Direction);
+            }
+
+            return t;
+        }
+
+        public bool MovesShip()
+        {
+            return !movesWaypoint;
         }
     }
 }
