@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace advent_of_code_2020.Day12
+﻿namespace advent_of_code_2020.Day12
 {
     public class WaypointNavigation : NavigationStrategy
     {
         private Transform ship;
         private Transform waypoint;
 
-        public WaypointNavigation()
+        public WaypointNavigation(
+            Transform ship,
+            Transform waypoint)
         {
-            ship = new Transform(0, 0, Direction.East);
-            waypoint = new Transform(1, 10);
+            this.ship = ship;
+            this.waypoint = waypoint;
         }
 
         protected override void navigate(ICommand command)
@@ -35,9 +31,9 @@ namespace advent_of_code_2020.Day12
             return new WaypointRotateCommand(degrees, rotationDirection);
         }
 
-        protected override ICommand parseForwardMove(int amount)
+        protected override ICommand parseForwardMove(int times)
         {
-            return new WaypointForwardMove(ship, waypoint, amount);
+            return new WaypointForwardMove(waypoint, times);
         }
 
         public override int GetManhattanDistance()

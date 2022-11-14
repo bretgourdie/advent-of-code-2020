@@ -14,9 +14,9 @@ namespace advent_of_code_2020.Day12
             Direction.West
         };
 
-        public ShipNavigation()
+        public ShipNavigation(Transform ship)
         {
-            ship = new Transform(0, 0, Direction.East);
+            this.ship = ship;
         }
 
         protected override void navigate(ICommand command)

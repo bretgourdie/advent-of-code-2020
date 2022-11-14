@@ -7,7 +7,7 @@ namespace advent_of_code_2020.Day12
     {
         protected override void performWorkForProblem1(IList<string> inputData)
         {
-            performWork(inputData, new ShipNavigation());
+            performWork(inputData, new ShipNavigation(ship()));
         }
 
         private void performWork(
@@ -25,7 +25,23 @@ namespace advent_of_code_2020.Day12
 
         protected override void performWorkForProblem2(IList<string> inputData)
         {
-            performWork(inputData, new WaypointNavigation());
+            performWork(
+                inputData,
+                new WaypointNavigation(
+                    ship(),
+                    waypoint()
+                )
+            );
+        }
+
+        private Transform ship()
+        {
+            return new Transform(0, 0, Direction.East);
+        }
+
+        private Transform waypoint()
+        {
+            return new Transform(10, 1);
         }
     }
 }

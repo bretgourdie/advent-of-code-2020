@@ -19,5 +19,10 @@
             Y = y;
             Direction = direction;
         }
+
+        public override string ToString()
+        {
+            return $"{X},{Y}, {Direction}";
+        }
     }
 }
