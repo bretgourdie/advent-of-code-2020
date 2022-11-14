@@ -10,26 +10,22 @@ namespace advent_of_code_2020.Day22
 
         protected override void performWorkForProblem1(IList<string> inputData)
         {
+            performWork(inputData,
+                new Combat());
+        }
+
+        protected void performWork(
+            IList<string> inputData,
+            ICombatRules combatRules)
+        {
             var decks = getPlayerDecks(inputData).ToArray();
 
-            for (int round = 1; decks.All(deck => deck.HasCards()); round++)
+            while (combatRules.KeepPlayingGame(decks))
             {
-                var cards = decks.Select(x => x.Draw()).ToList();
-
-                int bestIndex = 0;
-                for (int cardIndex = bestIndex + 1; cardIndex < cards.Count; cardIndex++)
-                {
-                    if (cards[cardIndex] > cards[bestIndex])
-                    {
-                        bestIndex = cardIndex;
-                    }
-                }
-
-                decks[bestIndex].Add(cards[bestIndex]);
-                decks[bestIndex].Add(cards[(bestIndex + 1) % cards.Count]);
+                combatRules.EvaluateRound(decks);
             }
 
-            var score = decks.Where(deck => deck.HasCards()).Single().GetScore();
+            var score = decks.Single(deck => deck.HasCards()).GetScore();
 
             Console.WriteLine($"The score is {score}");
         }
