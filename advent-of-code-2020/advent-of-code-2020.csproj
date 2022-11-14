@@ -129,6 +129,7 @@
     <Compile Include="Day22\Combat.cs" />
     <Compile Include="Day22\ICombatRules.cs" />
     <Compile Include="Day22\PlayerDeck.cs" />
+    <Compile Include="Day22\RecursiveCombat.cs" />
     <Compile Include="Day22\Solution.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

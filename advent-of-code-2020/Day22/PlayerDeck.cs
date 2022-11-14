@@ -26,10 +26,9 @@ namespace advent_of_code_2020.Day22
             return deck.Dequeue();
         }
 
-        public void Win(int winningCard, int losingCard)
+        public IEnumerable<int> Cards()
         {
-            deck.Enqueue(winningCard);
-            deck.Enqueue(losingCard);
+            return deck.AsEnumerable();
         }
 
         public bool HasCards() => deck.Any();
