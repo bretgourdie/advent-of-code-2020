@@ -6,22 +6,17 @@ namespace advent_of_code_2020.Day22
     {
 
         public bool KeepPlayingGame(PlayerDeck[] decks) => decks.All(deck => deck.HasCards());
+        public void EvaluateRound(PlayerDeck[] decks) { }
 
-        public void EvaluateRound(PlayerDeck[] decks)
+        public bool ShouldPlaySubGame(PlayerDeck[] decks, int[] playerCards) => false;
+        public int GetWinner(PlayerDeck[] decks)
         {
-            var cards = decks.Select(x => x.Draw()).ToList();
-
-            int bestIndex = 0;
-            for (int cardIndex = bestIndex + 1; cardIndex < cards.Count; cardIndex++)
+            for (int ii = 0; ii < decks.Length; ii++)
             {
-                if (cards[cardIndex] > cards[bestIndex])
-                {
-                    bestIndex = cardIndex;
-                }
+                if (decks[ii].HasCards()) return ii;
             }
 
-            decks[bestIndex].Add(cards[bestIndex]);
-            decks[bestIndex].Add(cards[(bestIndex + 1) % cards.Count]);
+            return -1;
         }
     }
 }

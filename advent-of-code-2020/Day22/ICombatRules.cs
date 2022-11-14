@@ -4,5 +4,7 @@
     {
         bool KeepPlayingGame(PlayerDeck[] decks);
         void EvaluateRound(PlayerDeck[] decks);
+        bool ShouldPlaySubGame(PlayerDeck[] decks, int[] playerCards);
+        int GetWinner(PlayerDeck[] decks);
     }
 }
