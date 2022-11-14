@@ -15,7 +15,7 @@
 
         protected override void navigate(ICommand command)
         {
-            if (command is AbsoluteDirectionCommand || command is WaypointRotateCommand)
+            if (command is MovementCommand || command is WaypointRotateCommand)
             {
                 waypoint = command.Resolve(waypoint);
             }

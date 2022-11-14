@@ -76,7 +76,7 @@
     <Compile Include="Day11\Point2D.cs" />
     <Compile Include="Day11\SeatStatus.cs" />
     <Compile Include="Day11\Solution.cs" />
-    <Compile Include="Day12\AbsoluteDirectionCommand.cs" />
+    <Compile Include="Day12\MovementCommand.cs" />
     <Compile Include="Day12\ICommand.cs" />
     <Compile Include="Day12\NavigationStrategy.cs" />
     <Compile Include="Day12\ShipRotateCommand.cs" />

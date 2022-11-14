@@ -35,13 +35,13 @@ namespace advent_of_code_2020.Day12
             switch (letter)
             {
                 case North:
-                    return new AbsoluteDirectionCommand(number, Direction.North);
+                    return new MovementCommand(number, Direction.North);
                 case South:
-                    return new AbsoluteDirectionCommand(number, Direction.South);
+                    return new MovementCommand(number, Direction.South);
                 case East:
-                    return new AbsoluteDirectionCommand(number, Direction.East);
+                    return new MovementCommand(number, Direction.East);
                 case West:
-                    return new AbsoluteDirectionCommand(number, Direction.West);
+                    return new MovementCommand(number, Direction.West);
 
                 case Left:
                     return parseRotation(number, RotationDirection.CounterClockwise);
