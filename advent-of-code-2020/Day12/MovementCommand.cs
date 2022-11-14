@@ -6,13 +6,14 @@ namespace advent_of_code_2020.Day12
     {
         private readonly Transform movement;
         private readonly int times = 1;
-        private bool movesWaypoint;
+        private readonly bool movesWaypoint;
 
         public MovementCommand(
             int amount,
             Direction direction)
         {
-            movement = convertDirectionToMovement(amount, direction);
+            movement = convertDirectionToMovement(direction);
+            this.times = amount;
             movesWaypoint = true;
         }
 
@@ -26,19 +27,18 @@ namespace advent_of_code_2020.Day12
         }
 
         private Transform convertDirectionToMovement(
-            int amount,
             Direction direction)
         {
             switch (direction)
             {
                 case Direction.North:
-                    return new Transform(0, amount);
+                    return new Transform(0, 1);
                 case Direction.South:
-                    return new Transform(0, -1 * amount);
+                    return new Transform(0, -1);
                 case Direction.East:
-                    return new Transform(amount, 0);
+                    return new Transform(1, 0);
                 case Direction.West:
-                    return new Transform(-1 * amount, 0);
+                    return new Transform(-1, 0);
                 default:
                     throw new NotImplementedException();
             }
