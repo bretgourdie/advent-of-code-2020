@@ -79,7 +79,6 @@
     <Compile Include="Day12\AbsoluteDirectionCommand.cs" />
     <Compile Include="Day12\ICommand.cs" />
     <Compile Include="Day12\NavigationStrategy.cs" />
-    <Compile Include="Day12\ShipForwardMove.cs" />
     <Compile Include="Day12\ShipRotateCommand.cs" />
     <Compile Include="Day12\RotationDirection.cs" />
     <Compile Include="Day12\ShipNavigation.cs" />

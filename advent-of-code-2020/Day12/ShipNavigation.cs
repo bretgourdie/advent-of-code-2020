@@ -31,7 +31,7 @@ namespace advent_of_code_2020.Day12
 
         protected override ICommand parseForwardMove(int amount)
         {
-            return new ShipForwardMove(amount);
+            return new AbsoluteDirectionCommand(amount, ship.Direction);
         }
 
         public override int GetManhattanDistance()
