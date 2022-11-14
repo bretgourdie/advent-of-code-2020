@@ -2,13 +2,22 @@
 {
     public class Transform
     {
-        public int X { get; private set; }
-        public int Y { get; private set; }
+        public readonly Direction Direction;
+        public readonly int X;
+        public readonly int Y;
 
-        public Transform(int x, int y)
+        public Transform(
+            int x,
+            int y) : this(x, y, Direction.North) { }
+
+        public Transform(
+            int x,
+            int y,
+            Direction direction)
         {
             X = x;
             Y = y;
+            Direction = direction;
         }
     }
 }
