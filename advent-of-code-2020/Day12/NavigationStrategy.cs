@@ -57,6 +57,6 @@ namespace advent_of_code_2020.Day12
         }
 
         protected abstract ICommand parseRotation(int degrees, RotationDirection rotationDirection);
-        protected abstract ICommand parseForwardMove(int amount);
+        protected abstract ForwardMoveCommand parseForwardMove(int amount);
     }
 }

@@ -29,9 +29,9 @@ namespace advent_of_code_2020.Day12
             return new ShipRotateCommand(degrees, rotationDirection, rotationsClockwise);
         }
 
-        protected override ICommand parseForwardMove(int amount)
+        protected override ForwardMoveCommand parseForwardMove(int amount)
         {
-            return new MovementCommand(amount, ship.Direction);
+            return new ForwardMoveCommand(amount, ship.Direction);
         }
 
         public override int GetManhattanDistance()

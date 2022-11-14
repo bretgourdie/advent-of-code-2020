@@ -20,7 +20,7 @@
                 waypoint = command.Resolve(waypoint);
             }
 
-            else
+            else if (command is ForwardMoveCommand)
             {
                 ship = command.Resolve(ship);
             }
@@ -31,9 +31,9 @@
             return new WaypointRotateCommand(degrees, rotationDirection);
         }
 
-        protected override ICommand parseForwardMove(int times)
+        protected override ForwardMoveCommand parseForwardMove(int times)
         {
-            return new WaypointForwardMove(waypoint, times);
+            return new ForwardMoveCommand(waypoint, times);
         }
 
         public override int GetManhattanDistance()
