@@ -126,6 +126,8 @@
     <Compile Include="Day19\Solution.cs" />
     <Compile Include="Day21\Recipe.cs" />
     <Compile Include="Day21\Solution.cs" />
+    <Compile Include="Day23\CupCircle.cs" />
+    <Compile Include="Day23\Solution.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -259,6 +261,8 @@
     <Content Include="Day21\input.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Day23\example.txt" />
+    <Content Include="Day23\input.txt" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
