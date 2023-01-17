@@ -127,7 +127,10 @@
     <Compile Include="Day21\Recipe.cs" />
     <Compile Include="Day21\Solution.cs" />
     <Compile Include="Day23\CupCircle.cs" />
+    <Compile Include="Day23\ICupInstructions.cs" />
     <Compile Include="Day23\Solution.cs" />
+    <Compile Include="Day23\TranslatedInstructions.cs" />
+    <Compile Include="Day23\UntranslatedInstructions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace advent_of_code_2020.Day23
 {
@@ -13,48 +12,35 @@ namespace advent_of_code_2020.Day23
         private LinkedListNode<int> _destination;
         private IList<int> _pickedUpCups;
         private int _movesMade;
+        private readonly ICupInstructions _instructions;
 
-        public CupCircle(string cups)
+        public CupCircle(ICupInstructions instructions, string cups)
         {
-            _circle = new LinkedList<int>();
+            _instructions = instructions;
 
-            foreach (var number in cups)
-            {
-                _circle.AddLast(int.Parse(number.ToString()));
-            }
+            _circle = _instructions.makeCups(cups);
 
             _currentCup = _circle.First;
         }
 
         public string MakeMoves()
         {
-            for (int ii = 0; ii < 100; ii++)
+            for (int ii = 0; ii < _instructions.numberOfMoves; ii++)
             {
                 Move();
             }
 
-            return numbersAfterOne();
+            return _instructions.getAnswer(
+                _circle.Find(1),
+                getNextCup);
         }
 
-        private string numbersAfterOne()
-        {
-            var node = getNextCup(_circle.Find(1));
-            var numbersAfterOne = new StringBuilder();
-
-            while (node.Value != 1)
-            {
-                numbersAfterOne.Append(node.Value.ToString());
-                node = getNextCup(node);
-            }
-
-            return numbersAfterOne.ToString();
-        }
 
         public void Move()
         {
             _pickedUpCups = pickUpCups();
             _destination = findDestinationCup();
-            //printStatus();
+            printStatus();
             moveTheCups();
             selectNextCurrentCup();
         }

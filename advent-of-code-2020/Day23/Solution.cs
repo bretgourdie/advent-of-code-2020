@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace advent_of_code_2020.Day23
 {
@@ -12,13 +10,26 @@ namespace advent_of_code_2020.Day23
         {
             Console.WriteLine(
                 "The numbers after one are \""
-                + new CupCircle(inputData.Single()).MakeMoves()
+                + performWork(inputData, new UntranslatedInstructions())
                 + "\"");
         }
 
         protected override void performWorkForProblem2(IList<string> inputData)
         {
-            throw new NotImplementedException();
+            Console.WriteLine(
+                "The product of the next two cups are \""
+                + performWork(inputData, new TranslatedInstructions())
+                + "\"");
+        }
+
+        private string performWork(
+            IList<string> inputData,
+            ICupInstructions instructions)
+        {
+            return new CupCircle(
+                    instructions,
+                    inputData.Single())
+                .MakeMoves();
         }
     }
 }
