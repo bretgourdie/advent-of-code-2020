@@ -14,6 +14,8 @@ namespace advent_of_code_2020.Day23
         private int _movesMade;
         private readonly ICupInstructions _instructions;
 
+        private List<State> allStates = new List<State>();
+
         public CupCircle(ICupInstructions instructions, string cups)
         {
             _instructions = instructions;
@@ -42,7 +44,32 @@ namespace advent_of_code_2020.Day23
             _destination = findDestinationCup();
             printStatus();
             moveTheCups();
+            checkStatus();
+
             selectNextCurrentCup();
+        }
+
+        private void checkStatus()
+        {
+            var state = new State(_circle, _pickedUpCups, _destination, _currentCup);
+
+            foreach (var pastState in allStates)
+            {
+                if (state.Matches(pastState))
+                {
+                    Console.WriteLine("Found cycle... ");
+                    var index = allStates.IndexOf(pastState);
+                    var cycle = _movesMade - index;
+                    while (_movesMade + cycle < _instructions.numberOfMoves)
+                    {
+                        _movesMade += cycle;
+                    }
+
+                    Console.WriteLine($"Skipped to move {_movesMade}");
+                }
+            }
+
+            allStates.Add(state);
         }
 
         private void selectNextCurrentCup()
@@ -52,7 +79,8 @@ namespace advent_of_code_2020.Day23
 
         private void printStatus()
         {
-            Console.WriteLine(this);
+            if ((_movesMade + 1) % 100 == 0)
+                Console.WriteLine($" -- move {_movesMade + 1} --");
         }
 
         private void moveTheCups()
