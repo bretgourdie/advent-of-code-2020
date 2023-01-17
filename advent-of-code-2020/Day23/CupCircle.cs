@@ -8,107 +8,155 @@ namespace advent_of_code_2020.Day23
 {
     class CupCircle
     {
-        private int[] _cups;
-        private int _currentCupIndex;
-        private int[] _pickedUpCups = new int[3];
-        private int _destination;
-        private int _moves;
+        private LinkedList<int> _circle;
+        private LinkedListNode<int> _currentCup;
+        private LinkedListNode<int> _destination;
+        private IList<int> _pickedUpCups;
+        private int _movesMade;
 
         public CupCircle(string cups)
         {
-            _cups = new int[cups.Length];
+            _circle = new LinkedList<int>();
 
-            for (int ii = 0; ii < cups.Length; ii++)
+            foreach (var number in cups)
             {
-                _cups[ii] = int.Parse(cups[ii].ToString());
+                _circle.AddLast(int.Parse(number.ToString()));
             }
 
-            _currentCupIndex = 0;
+            _currentCup = _circle.First;
         }
 
-        public void PerformMoves()
+        public string MakeMoves()
         {
-            for (int ii = 0; ii < 10; ii++)
+            for (int ii = 0; ii < 100; ii++)
             {
                 Move();
-                Console.WriteLine(ToString());
+            }
+
+            return numbersAfterOne();
+        }
+
+        private string numbersAfterOne()
+        {
+            var node = getNextCup(_circle.Find(1));
+            var numbersAfterOne = new StringBuilder();
+
+            while (node.Value != 1)
+            {
+                numbersAfterOne.Append(node.Value.ToString());
+                node = getNextCup(node);
+            }
+
+            return numbersAfterOne.ToString();
+        }
+
+        public void Move()
+        {
+            _pickedUpCups = pickUpCups();
+            _destination = findDestinationCup();
+            //printStatus();
+            moveTheCups();
+            selectNextCurrentCup();
+        }
+
+        private void selectNextCurrentCup()
+        {
+            _currentCup = getNextCup(_currentCup);
+        }
+
+        private void printStatus()
+        {
+            Console.WriteLine(this);
+        }
+
+        private void moveTheCups()
+        {
+            removePickedUpCupsFromCircle();
+            insertPickedUpCupsAtDestination();
+            _movesMade += 1;
+        }
+
+        private void removePickedUpCupsFromCircle()
+        {
+            foreach (var pickedUpCup in _pickedUpCups)
+            {
+                _circle.Remove(pickedUpCup);
             }
         }
 
-        private void Move()
+        private void insertPickedUpCupsAtDestination()
         {
-            _destination = -1;
+            var theCup = _destination;
+            foreach (var pickedUpCup in _pickedUpCups)
+            {
+                _circle.AddAfter(theCup, pickedUpCup);
+                theCup = getNextCup(theCup);
+            }
+        }
 
+        private LinkedListNode<int> findDestinationCup()
+        {
+            var adjustedTarget = getTarget(_currentCup.Value - 1);
+            return adjustedTarget;
+        }
+
+        private LinkedListNode<int> getTarget(int value)
+        {
+            while (value < _circle.Min() || _pickedUpCups.Contains(value))
+            {
+                if (value < _circle.Min())
+                {
+                    value = _circle.Max();
+                }
+
+                if (_pickedUpCups.Contains(value))
+                {
+                    value -= 1;
+                }
+            }
+
+            return _circle.Find(value);
+        }
+
+        private IList<int> pickUpCups()
+        {
+            var currentPickedUpCup = getNextCup(_currentCup);
+            var pickedUpCups = new List<int>();
             for (int ii = 0; ii < 3; ii++)
             {
-                var circleIndex = (_currentCupIndex + 1 + ii) % _cups.Length;
-                _pickedUpCups[ii] = _cups[circleIndex];
+                pickedUpCups.Add(currentPickedUpCup.Value);
+                currentPickedUpCup = getNextCup(currentPickedUpCup);
             }
 
-            var target = _cups[_currentCupIndex] - 1;
-
-            _destination = getAdjustedTarget(target);
-
-            var destinationIndex = getDestinationCupIndex(_destination);
-
+            return pickedUpCups;
         }
 
-        private int getAdjustedTarget(int target)
-        {
-            while (targetInPickedUpCups(target) || targetBelowPossibleValue(target))
-            {
-                if (targetInPickedUpCups(target))
-                {
-                    target -= 1;
-                }
-
-                if (targetBelowPossibleValue(target))
-                {
-                    target = _cups.Max();
-                }
-            }
-
-            return target;
-        }
-
-        private bool targetInPickedUpCups(int target) => _pickedUpCups.Contains((target));
-
-        private bool targetBelowPossibleValue(int target) => target < _cups.Min();
-
-        private int getDestinationCupIndex(int destination)
-        {
-            for (int ii = 0; ii < _cups.Length; ii++)
-            {
-                if (_cups[ii] == destination)
-                    return ii;
-            }
-
-            throw new IndexOutOfRangeException();
-        }
+        private LinkedListNode<int> getNextCup(LinkedListNode<int> fromCup) =>
+            fromCup.Next ?? _circle.First;
 
         public override string ToString()
         {
             var cupRepresentation = new StringBuilder();
-            for (int ii = 0; ii < _cups.Length; ii++)
+            foreach (var cup in _circle)
             {
-                if (ii == _currentCupIndex)
+                if (cup == _currentCup.Value)
                 {
-                    cupRepresentation.Append($" ({ii})");
+                    cupRepresentation.Append($" ({cup})");
                 }
 
                 else
                 {
-                    cupRepresentation.Append(ii);
+                    cupRepresentation.Append($" {cup}");
                 }
             }
 
             var pickedUpCups = String.Join(", ", _pickedUpCups);
 
             return
-                $"-- move {_moves} --{Environment.NewLine}"
+                $"-- move {_movesMade + 1} --{Environment.NewLine}"
                 + $"cups: {cupRepresentation}{Environment.NewLine}"
                 + $"pick up: {pickedUpCups}{Environment.NewLine}"
-                + $"destination: {_destination}{Environment.NewLine}";
+                + $"destination: {_destination.Value}{Environment.NewLine}";
         }
     }
 }

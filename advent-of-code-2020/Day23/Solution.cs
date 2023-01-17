@@ -10,6 +10,10 @@ namespace advent_of_code_2020.Day23
     {
         protected override void performWorkForProblem1(IList<string> inputData)
         {
+            Console.WriteLine(
+                "The numbers after one are \""
+                + new CupCircle(inputData.Single()).MakeMoves()
+                + "\"");
         }
 
         protected override void performWorkForProblem2(IList<string> inputData)
