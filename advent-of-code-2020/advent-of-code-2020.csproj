@@ -126,6 +126,11 @@
     <Compile Include="Day19\Solution.cs" />
     <Compile Include="Day21\Recipe.cs" />
     <Compile Include="Day21\Solution.cs" />
+    <Compile Include="Day24\Color.cs" />
+    <Compile Include="Day24\Lobby.cs" />
+    <Compile Include="Day24\Point2D.cs" />
+    <Compile Include="Day24\Solution.cs" />
+    <Compile Include="Day24\Tile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -258,6 +263,12 @@
     </Content>
     <Content Include="Day21\input.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day24\example.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day24\input.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup />
