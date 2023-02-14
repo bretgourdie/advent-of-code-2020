@@ -8,10 +8,104 @@ namespace advent_of_code_2020.Day24
     {
         private IDictionary<Point2D, Tile> floorGrid = new Dictionary<Point2D, Tile>();
 
+        private readonly IDictionary<string, Point2D> instructionToTransformation = new Dictionary<string, Point2D>()
+        {
+            { "e", new Point2D(1, 0) },
+            { "se", new Point2D(0, 1) },
+            { "sw", new Point2D(-1, 1) },
+            { "w", new Point2D(-1, 0) },
+            { "nw", new Point2D(0, -1) },
+            { "ne", new Point2D(1, -1) }
+        };
+
         public long FlipTiles(IList<string> instructions)
         {
             flipTiles(instructions);
             return countBlackTiles();
+        }
+
+        public long LivingFlipForDays(int days)
+        {
+            for (int day = 1; day <= days; day++)
+            {
+                livingFlip();
+
+                if (day <= 10 || day % 10 == 0)
+                {
+                    Console.WriteLine($"Day {day}: {countBlackTiles()}");
+                }
+            }
+
+            return countBlackTiles();
+        }
+
+        private void livingFlip()
+        {
+            var flipToBlack = new List<Point2D>();
+            var flipToWhite = new List<Point2D>();
+
+            foreach (var pointAndTile in floorGrid)
+            {
+                var point = pointAndTile.Key;
+                var tile = pointAndTile.Value;
+
+                if (shouldFlipToBlack(point, tile))
+                {
+                    flipToBlack.Add(point);
+                }
+
+                else if (shouldFlipToWhite(point, tile))
+                {
+                    flipToWhite.Add(point);
+                }
+            }
+
+            foreach (var point in flipToBlack)
+            {
+                addAndFlip(point);
+            }
+
+            foreach (var point in flipToWhite)
+            {
+                addAndFlip(point);
+            }
+        }
+
+        private bool shouldFlipToBlack(Point2D point, Tile tile)
+        {
+            if (tile.Color == Color.Black)
+            {
+                return false;
+            }
+
+            var adjacentBlackTiles = countAdjacentBlackTiles(point);
+
+            return adjacentBlackTiles == 0 || adjacentBlackTiles > 2;
+        }
+
+        private bool shouldFlipToWhite(Point2D point, Tile tile) =>
+            tile.Color != Color.White && countAdjacentBlackTiles(point) == 2;
+
+        private int countAdjacentBlackTiles(Point2D point)
+        {
+            var blackTiles = 0;
+
+            foreach (var instruction in instructionToTransformation.Keys)
+            {
+                var transformation = instructionToTransformation[instruction];
+
+                var checkingPoint = new Point2D(point.Q + transformation.Q, point.R + transformation.R);
+
+                if (floorGrid.ContainsKey(checkingPoint))
+                {
+                    if (floorGrid[checkingPoint].Color == Color.Black)
+                    {
+                        blackTiles += 1;
+                    }
+                }
+            }
+
+            return blackTiles;
         }
 
         private void flipTiles(IList<string> instructions)
@@ -73,34 +167,12 @@ namespace advent_of_code_2020.Day24
             Point2D position,
             string instruction)
         {
-            int q = position.Q;
-            int r = position.R;
+            var transformation = instructionToTransformation[instruction];
 
-            switch (instruction)
-            {
-                case "e":
-                    q += 1;
-                    break;
-                case "se":
-                    r += 1;
-                    break;
-                case "sw":
-                    q -= 1;
-                    r += 1;
-                    break;
-                case "w":
-                    q -= 1;
-                    break;
-                case "nw":
-                    r -= 1;
-                    break;
-                case "ne":
-                    q += 1;
-                    r -= 1;
-                    break;
-            }
-
-            return new Point2D(q, r);
+            return new Point2D(
+                position.Q + transformation.Q,
+                position.R + transformation.R
+            );
         }
 
         private long countBlackTiles() =>
