@@ -47,12 +47,15 @@ namespace advent_of_code_2020.Day24
             foreach (var pointAndTile in floorGrid)
             {
                 var point = pointAndTile.Key;
-                foreach (var neighbor in neighbors(point))
-                {
-                    checkFlip(flipToBlack, flipToWhite, neighbor);
-                }
+                var selfAndNeighbors = getSelfAndNeighbors(point, floorGrid, flipToBlack, flipToWhite);
 
-                checkFlip(flipToBlack, flipToWhite, point);
+                foreach (var checkPoint in selfAndNeighbors)
+                {
+                    checkFlip(
+                        checkPoint,
+                        flipToBlack,
+                        flipToWhite);
+                }
             }
 
             foreach (var point in flipToBlack)
@@ -66,25 +69,38 @@ namespace advent_of_code_2020.Day24
             }
         }
 
-        private IEnumerable<Point2D> neighbors(Point2D point)
+        private IEnumerable<Point2D> getSelfAndNeighbors(
+            Point2D point,
+            IDictionary<Point2D, Tile> floorGrid,
+            ISet<Point2D> flipToBlack,
+            ISet<Point2D> flipToWhite)
         {
+            yield return point;
+
             foreach (var instruction in instructionToTransformation.Keys)
             {
                 var transform = instructionToTransformation[instruction];
-                yield return new Point2D(
+
+                var neighborPoint = new Point2D(
                     point.Q + transform.Q,
-                    point.R + transform.R
-                );
+                    point.R + transform.R);
+
+                if (!floorGrid.ContainsKey(neighborPoint)
+                    && !flipToBlack.Contains(neighborPoint)
+                    && !flipToWhite.Contains(neighborPoint))
+                {
+                    yield return neighborPoint;
+                }
             }
         }
 
         private void checkFlip(
-            HashSet<Point2D> flipToBlack,
-            HashSet<Point2D> flipToWhite,
-            Point2D point)
+            Point2D point,
+            ISet<Point2D> flipToBlack,
+            ISet<Point2D> flipToWhite)
         {
-            if (pointWillBeFlipped(flipToBlack, point)
-                || pointWillBeFlipped(flipToWhite, point))
+            if (flipToBlack.Contains(point)
+                || flipToWhite.Contains(point))
             {
                 return;
             }
@@ -112,12 +128,7 @@ namespace advent_of_code_2020.Day24
             return new Tile(point);
         }
 
-        private bool pointWillBeFlipped(
-            HashSet<Point2D> flipSet,
-            Point2D point) =>
-            flipSet.Contains(point);
-
-        private void addIfNotExists(HashSet<Point2D> list, Point2D point)
+        private void addIfNotExists(ISet<Point2D> list, Point2D point)
         {
             if (!list.Contains(point))
             {
