@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 
 namespace advent_of_code_2020.Day24
 {
     class Lobby
     {
+        private const bool MATCH_EXAMPLE_OUTPUT = true;
+
         private readonly IDictionary<string, Point2D> instructionToTransformation = new Dictionary<string, Point2D>()
         {
             { "ne", new Point2D(1, -1) },
@@ -40,9 +41,12 @@ namespace advent_of_code_2020.Day24
             {
                 livingFlip(blackTiles);
 
-                if (day <= 10 || day % 10 == 0)
+                if (MATCH_EXAMPLE_OUTPUT)
                 {
-                    Console.WriteLine($"Day {day}: {blackTiles.Count()}");
+                    if (day <= 10 || day % 10 == 0)
+                    {
+                        Console.WriteLine($"Day {day}: {blackTiles.Count()}");
+                    }
                 }
             }
 
@@ -60,7 +64,7 @@ namespace advent_of_code_2020.Day24
 
                 foreach (var checkPoint in selfAndNeighbors)
                 {
-                    checkFlip(
+                    checkLivingFlip(
                         checkPoint,
                         blackTiles,
                         flipToBlack,
@@ -103,7 +107,7 @@ namespace advent_of_code_2020.Day24
             }
         }
 
-        private void checkFlip(
+        private void checkLivingFlip(
             Point2D point,
             ISet<Point2D> blackTiles,
             ISet<Point2D> flipToBlack,
@@ -139,39 +143,19 @@ namespace advent_of_code_2020.Day24
             }
         }
 
-        private bool shouldFlipToWhite(
-            bool isBlackTile,
-            int neighboringBlackTiles)
-        {
-            var correctNumberOfBlackTiles = neighboringBlackTiles == 0 || neighboringBlackTiles > 2;
+        private bool shouldFlipToWhite(bool isBlackTile, int neighboringBlackTiles) =>
+            isBlackTile
+            && (neighboringBlackTiles == 0 || neighboringBlackTiles > 2);
 
-            return isBlackTile && correctNumberOfBlackTiles;
-        }
-
-        private bool shouldFlipToBlack(
-            bool isBlackTile,
-            int neighboringBlackTiles)
-        {
-            var correctNumberOfBlackTiles = neighboringBlackTiles == 2;
-
-            return !isBlackTile && correctNumberOfBlackTiles;
-        }
+        private bool shouldFlipToBlack(bool isBlackTile, int neighboringBlackTiles) =>
+            !isBlackTile
+            && neighboringBlackTiles == 2;
 
         private int countAdjacentBlackTiles(
             Point2D point,
-            ISet<Point2D> blackTiles)
-        {
-            var blackTileCount = 0;
-
-            var neighbors = getNeighbors(point).ToList();
-
-            var neighborsThatAreBlackTiles =
-                neighbors
-                    .Where(neighbor => blackTiles.Contains(neighbor))
-                    .ToList();
-
-            return neighborsThatAreBlackTiles.Count();
-        }
+            ISet<Point2D> blackTiles) =>
+            getNeighbors(point)
+                .Count(neighbor => blackTiles.Contains(neighbor));
 
         private void flipTiles(
             IList<string> instructions,
