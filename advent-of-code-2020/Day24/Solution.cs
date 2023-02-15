@@ -14,10 +14,9 @@ namespace advent_of_code_2020.Day24
 
         protected override void performWorkForProblem2(IList<string> inputData)
         {
-            var lobby = new Lobby();
-            lobby.FlipTiles(inputData);
-
-            var flipFor100Days = lobby.LivingFlipForDays(100);
+            var flipFor100Days = new Lobby().LivingFlipForDays(
+                inputData,
+                days: 100);
 
             Console.WriteLine(
                 $"The number of tiles flipped to black after 100 days is {flipFor100Days}");

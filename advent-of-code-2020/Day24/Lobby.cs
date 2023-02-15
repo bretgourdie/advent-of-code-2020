@@ -1,58 +1,68 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace advent_of_code_2020.Day24
 {
     class Lobby
     {
-        private IDictionary<Point2D, Tile> floorGrid = new Dictionary<Point2D, Tile>();
-
         private readonly IDictionary<string, Point2D> instructionToTransformation = new Dictionary<string, Point2D>()
         {
+            { "ne", new Point2D(1, -1) },
             { "e", new Point2D(1, 0) },
             { "se", new Point2D(0, 1) },
             { "sw", new Point2D(-1, 1) },
             { "w", new Point2D(-1, 0) },
-            { "nw", new Point2D(0, -1) },
-            { "ne", new Point2D(1, -1) }
+            { "nw", new Point2D(0, -1) }
         };
 
         public long FlipTiles(IList<string> instructions)
         {
-            flipTiles(instructions);
-            return countBlackTiles();
+            return performFlipInstructions(instructions).Count();
         }
 
-        public long LivingFlipForDays(int days)
+        private ISet<Point2D> performFlipInstructions(
+            IList<string> instructions)
         {
+            ISet<Point2D> blackTiles = new HashSet<Point2D>();
+            flipTiles(instructions, blackTiles);
+            return blackTiles;
+        }
+
+        public long LivingFlipForDays(
+            IList<string> instructions,
+            int days)
+        {
+            var blackTiles = performFlipInstructions(instructions);
+
             for (int day = 1; day <= days; day++)
             {
-                livingFlip();
+                livingFlip(blackTiles);
 
                 if (day <= 10 || day % 10 == 0)
                 {
-                    Console.WriteLine($"Day {day}: {countBlackTiles()}");
+                    Console.WriteLine($"Day {day}: {blackTiles.Count()}");
                 }
             }
 
-            return countBlackTiles();
+            return blackTiles.Count();
         }
 
-        private void livingFlip()
+        private void livingFlip(ISet<Point2D> blackTiles)
         {
             var flipToBlack = new HashSet<Point2D>();
             var flipToWhite = new HashSet<Point2D>();
 
-            foreach (var pointAndTile in floorGrid)
+            foreach (var point in blackTiles)
             {
-                var point = pointAndTile.Key;
-                var selfAndNeighbors = getSelfAndNeighbors(point, floorGrid, flipToBlack, flipToWhite);
+                var selfAndNeighbors = getSelfAndNeighbors(point);
 
                 foreach (var checkPoint in selfAndNeighbors)
                 {
                     checkFlip(
                         checkPoint,
+                        blackTiles,
                         flipToBlack,
                         flipToWhite);
                 }
@@ -60,23 +70,27 @@ namespace advent_of_code_2020.Day24
 
             foreach (var point in flipToBlack)
             {
-                addAndFlip(point);
+                flipTileToBlack(point, blackTiles);
             }
 
             foreach (var point in flipToWhite)
             {
-                addAndFlip(point);
+                flipTileToWhite(point, blackTiles);
             }
         }
 
-        private IEnumerable<Point2D> getSelfAndNeighbors(
-            Point2D point,
-            IDictionary<Point2D, Tile> floorGrid,
-            ISet<Point2D> flipToBlack,
-            ISet<Point2D> flipToWhite)
+        private IEnumerable<Point2D> getSelfAndNeighbors(Point2D point)
         {
             yield return point;
 
+            foreach (var neighbor in getNeighbors(point))
+            {
+                yield return neighbor;
+            }
+        }
+
+        private IEnumerable<Point2D> getNeighbors(Point2D point)
+        {
             foreach (var instruction in instructionToTransformation.Keys)
             {
                 var transform = instructionToTransformation[instruction];
@@ -85,17 +99,13 @@ namespace advent_of_code_2020.Day24
                     point.Q + transform.Q,
                     point.R + transform.R);
 
-                if (!floorGrid.ContainsKey(neighborPoint)
-                    && !flipToBlack.Contains(neighborPoint)
-                    && !flipToWhite.Contains(neighborPoint))
-                {
-                    yield return neighborPoint;
-                }
+                yield return neighborPoint;
             }
         }
 
         private void checkFlip(
             Point2D point,
+            ISet<Point2D> blackTiles,
             ISet<Point2D> flipToBlack,
             ISet<Point2D> flipToWhite)
         {
@@ -105,27 +115,20 @@ namespace advent_of_code_2020.Day24
                 return;
             }
 
-            var tile = getTile(point);
+            var isBlackTile = blackTiles.Contains(point);
 
-            if (shouldFlipToBlack(point, tile))
+            var neighboringBlackTiles =
+                countAdjacentBlackTiles(point, blackTiles);
+
+            if (shouldFlipToBlack(isBlackTile, neighboringBlackTiles))
             {
                 addIfNotExists(flipToBlack, point);
             }
 
-            else if (shouldFlipToWhite(point, tile))
+            else if (shouldFlipToWhite(isBlackTile, neighboringBlackTiles))
             {
-                addIfNotExists(flipToBlack, point);
+                addIfNotExists(flipToWhite, point);
             }
-        }
-
-        private Tile getTile(Point2D point)
-        {
-            if (floorGrid.ContainsKey(point))
-            {
-                return floorGrid[point];
-            }
-
-            return new Tile(point);
         }
 
         private void addIfNotExists(ISet<Point2D> list, Point2D point)
@@ -136,44 +139,43 @@ namespace advent_of_code_2020.Day24
             }
         }
 
-        private bool shouldFlipToWhite(Point2D point, Tile tile)
+        private bool shouldFlipToWhite(
+            bool isBlackTile,
+            int neighboringBlackTiles)
         {
-            if (tile.Color == Color.White)
-            {
-                return false;
-            }
+            var correctNumberOfBlackTiles = neighboringBlackTiles == 0 || neighboringBlackTiles > 2;
 
-            var adjacentBlackTiles = countAdjacentBlackTiles(point);
-
-            return adjacentBlackTiles == 0 || adjacentBlackTiles > 2;
+            return isBlackTile && correctNumberOfBlackTiles;
         }
 
-        private bool shouldFlipToBlack(Point2D point, Tile tile) =>
-            tile.Color != Color.Black && countAdjacentBlackTiles(point) == 2;
-
-        private int countAdjacentBlackTiles(Point2D point)
+        private bool shouldFlipToBlack(
+            bool isBlackTile,
+            int neighboringBlackTiles)
         {
-            var blackTiles = 0;
+            var correctNumberOfBlackTiles = neighboringBlackTiles == 2;
 
-            foreach (var instruction in instructionToTransformation.Keys)
-            {
-                var transformation = instructionToTransformation[instruction];
-
-                var checkingPoint = new Point2D(point.Q + transformation.Q, point.R + transformation.R);
-
-                if (floorGrid.ContainsKey(checkingPoint))
-                {
-                    if (floorGrid[checkingPoint].Color == Color.Black)
-                    {
-                        blackTiles += 1;
-                    }
-                }
-            }
-
-            return blackTiles;
+            return !isBlackTile && correctNumberOfBlackTiles;
         }
 
-        private void flipTiles(IList<string> instructions)
+        private int countAdjacentBlackTiles(
+            Point2D point,
+            ISet<Point2D> blackTiles)
+        {
+            var blackTileCount = 0;
+
+            var neighbors = getNeighbors(point).ToList();
+
+            var neighborsThatAreBlackTiles =
+                neighbors
+                    .Where(neighbor => blackTiles.Contains(neighbor))
+                    .ToList();
+
+            return neighborsThatAreBlackTiles.Count();
+        }
+
+        private void flipTiles(
+            IList<string> instructions,
+            ISet<Point2D> blackTiles)
         {
             Point2D position;
 
@@ -193,7 +195,22 @@ namespace advent_of_code_2020.Day24
                     position = translateInstruction(position, sanitizedInstruction);
                 }
 
-                addAndFlip(position);
+                flip(position, blackTiles);
+            }
+        }
+
+        private void flip(
+            Point2D point,
+            ISet<Point2D> blackTiles)
+        {
+            if (blackTiles.Contains(point))
+            {
+                flipTileToWhite(point, blackTiles);
+            }
+
+            else
+            {
+                flipTileToBlack(point, blackTiles);
             }
         }
 
@@ -204,14 +221,18 @@ namespace advent_of_code_2020.Day24
             return ii + sanitizedInstruction.Length - 1;
         }
 
-        private void addAndFlip(Point2D position)
+        private void flipTileToBlack(
+            Point2D point,
+            ISet<Point2D> blackTiles)
         {
-            if (!floorGrid.ContainsKey(position))
-            {
-                floorGrid.Add(position, new Tile(position));
-            }
+            blackTiles.Add(point);
+        }
 
-            floorGrid[position].Flip();
+        private void flipTileToWhite(
+            Point2D point,
+            ISet<Point2D> blackTiles)
+        {
+            blackTiles.Remove(point);
         }
 
         private string sanitizeInstruction(string twoLetterInstruction)
@@ -239,9 +260,5 @@ namespace advent_of_code_2020.Day24
                 position.R + transformation.R
             );
         }
-
-        private long countBlackTiles() =>
-            floorGrid
-                .Count(pair => pair.Value.Color == Color.Black);
     }
 }

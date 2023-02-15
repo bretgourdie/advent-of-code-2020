@@ -130,7 +130,6 @@
     <Compile Include="Day24\Lobby.cs" />
     <Compile Include="Day24\Point2D.cs" />
     <Compile Include="Day24\Solution.cs" />
-    <Compile Include="Day24\Tile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
