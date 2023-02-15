@@ -64,7 +64,7 @@ namespace advent_of_code_2020.Day24
 
                 foreach (var checkPoint in selfAndNeighbors)
                 {
-                    checkLivingFlip(
+                    checkForLivingFlip(
                         checkPoint,
                         blackTiles,
                         flipToBlack,
@@ -107,7 +107,7 @@ namespace advent_of_code_2020.Day24
             }
         }
 
-        private void checkLivingFlip(
+        private void checkForLivingFlip(
             Point2D point,
             ISet<Point2D> blackTiles,
             ISet<Point2D> flipToBlack,
@@ -179,11 +179,11 @@ namespace advent_of_code_2020.Day24
                     position = translateInstruction(position, sanitizedInstruction);
                 }
 
-                flip(position, blackTiles);
+                flipForInitialSetup(position, blackTiles);
             }
         }
 
-        private void flip(
+        private void flipForInitialSetup(
             Point2D point,
             ISet<Point2D> blackTiles)
         {
