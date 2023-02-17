@@ -4,38 +4,41 @@ using System.Linq;
 
 namespace advent_of_code_2020.Day22
 {
-    public class PlayerDeck
+    public class Deck
     {
-        private readonly int player;
-        private readonly Queue<int> deck;
+        public readonly int Player;
+        public int PlayerZeroIndex => Player - 1;
+        private readonly Queue<int> cards;
 
-        public PlayerDeck(
+        public Deck(
             int player)
         {
-            this.player = player;
-            this.deck = new Queue<int>();
+            this.Player = player;
+            this.cards = new Queue<int>();
         }
 
         public void Add(int card)
         {
-            deck.Enqueue(card);
+            cards.Enqueue(card);
         }
 
         public int Draw()
         {
-            return deck.Dequeue();
+            return cards.Dequeue();
         }
 
         public IEnumerable<int> Cards()
         {
-            return deck.AsEnumerable();
+            return cards.AsEnumerable();
         }
 
-        public bool HasCards() => deck.Any();
+        public int CardCount() => cards.Count;
+
+        public bool HasCards() => cards.Any();
 
         public int GetScore()
         {
-            var deckList = deck.Reverse().ToList();
+            var deckList = cards.Reverse().ToList();
 
             int total = 0;
             for (int ii = 0; ii < deckList.Count; ii++)
@@ -48,7 +51,7 @@ namespace advent_of_code_2020.Day22
 
         public override string ToString()
         {
-            return $"Player {player}'s deck: " + String.Join(", ", deck);
+            return $"Player {Player}'s deck: " + String.Join(", ", cards);
         }
     }
 }

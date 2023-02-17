@@ -1,10 +1,12 @@
-﻿namespace advent_of_code_2020.Day22
+﻿using System.Collections.Generic;
+
+namespace advent_of_code_2020.Day22
 {
     public interface ICombatRules
     {
-        bool KeepPlayingGame(PlayerDeck[] decks);
-        void EvaluateRound(PlayerDeck[] decks);
-        bool ShouldPlaySubGame(PlayerDeck[] decks, int[] playerCards);
-        int GetWinner(PlayerDeck[] decks);
+        bool KeepPlayingGame(Deck[] decks);
+        bool ShouldPlaySubGame(Deck[] decks, IList<int> playerCards);
+        WinningState GetWinningState(Deck[] decks);
+        ICombatRules ForSubGame();
     }
 }

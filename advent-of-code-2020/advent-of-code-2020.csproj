@@ -127,10 +127,12 @@
     <Compile Include="Day21\Recipe.cs" />
     <Compile Include="Day21\Solution.cs" />
     <Compile Include="Day22\Combat.cs" />
+    <Compile Include="Day22\Game.cs" />
     <Compile Include="Day22\ICombatRules.cs" />
-    <Compile Include="Day22\PlayerDeck.cs" />
+    <Compile Include="Day22\Deck.cs" />
     <Compile Include="Day22\RecursiveCombat.cs" />
     <Compile Include="Day22\Solution.cs" />
+    <Compile Include="Day22\WinningState.cs" />
     <Compile Include="Day24\Lobby.cs" />
     <Compile Include="Day24\Point2D.cs" />
     <Compile Include="Day24\Solution.cs" />

@@ -1,69 +1,115 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace advent_of_code_2020.Day22
 {
     public class RecursiveCombat : ICombatRules
     {
-        private readonly HashSet<HashSet<HashSet<int>>> hands;
+        private readonly IDictionary<int, IList<IList<Deck>>> hashToDecks;
 
         public RecursiveCombat()
         {
-            hands = new HashSet<HashSet<HashSet<int>>>();
+            hashToDecks = new Dictionary<int, IList<IList<Deck>>>();
         }
 
-        public bool KeepPlayingGame(PlayerDeck[] decks)
+        public bool KeepPlayingGame(Deck[] decks)
         {
-            if (hands.Contains(getDecksHash(decks)))
+            var handHasBeenPlayed = handsHaveBeenPlayed(decks);
+
+            if (!handHasBeenPlayed)
             {
-                return false;
+                recordHand(decks);
+                return true;
             }
 
-            return decks.All(deck => deck.HasCards());
+            return !handHasBeenPlayed || decks.All(deck => deck.HasCards());
         }
 
-        public bool ShouldPlaySubGame(PlayerDeck[] decks, int[] playerCards)
+        private bool handsHaveBeenPlayed(Deck[] decks)
         {
-            bool shouldPlaySubGame = true;
+            var currentHash = decks.Sum(deck => deck.Cards().GetHashCode());
 
+            if (hashToDecks.ContainsKey(currentHash))
+            {
+                var hands = hashToDecks[currentHash];
+
+                foreach (var hand in hands)
+                {
+                    if (
+                        handMatchesDeck(hand[0].Cards(), decks[0].Cards())
+                        && handMatchesDeck(hand[1].Cards(), decks[1].Cards())
+                       )
+                    {
+                        return true;
+                    }
+                }
+            }
+
+
+
+            return false;
+        }
+
+        private bool handMatchesDeck(
+            IEnumerable<int> hand,
+            IEnumerable<int> deck)
+        {
+            return hand.SequenceEqual(deck);
+        }
+
+        public bool ShouldPlaySubGame(Deck[] decks, IList<int> playerCards)
+        {
             for (int ii = 0; ii < decks.Length; ii++)
             {
-                shouldPlaySubGame &= decks[ii].Cards().Count() >= playerCards[ii];
+                if (!(decks[ii].CardCount() >= playerCards[ii]))
+                {
+                    return false;
+                }
             }
 
-            return shouldPlaySubGame;
+            return true;
         }
 
-        public int GetWinner(PlayerDeck[] decks)
+        public WinningState GetWinningState(Deck[] decks)
         {
-            throw new NotImplementedException();
-        }
-
-        public void EvaluateRound(PlayerDeck[] decks)
-        {
-            recordHand(decks);
-        }
-
-        private void recordHand(PlayerDeck[] decks)
-        {
-            hands.Add(getDecksHash(decks));
-        }
-
-        private HashSet<HashSet<int>> getDecksHash(PlayerDeck[] decks)
-        {
-            var masterHash = new HashSet<HashSet<int>>();
-
-            foreach (var deck in decks)
+            for (int ii = 0; ii < decks.Length; ii++)
             {
-                masterHash.Add(
-                    new HashSet<int>(deck.Cards()));
+                if (!decks[ii].HasCards())
+                {
+                    return new WinningState(
+                        decks[(ii + 1) % decks.Length],
+                        decks[ii]);
+                }
             }
 
-            return masterHash;
+            // We still have cards, so "seen game" must have triggered
+            // Player 1 wins in this case
+            return new WinningState(
+                decks[0],
+                decks[1]);
+        }
+
+        public ICombatRules ForSubGame()
+        {
+            return new RecursiveCombat();
+        }
+
+        private void recordHand(Deck[] decks)
+        {
+            var deckHashes = decks.Sum(deck => deck.Cards().GetHashCode());
+
+            if (!hashToDecks.ContainsKey(deckHashes))
+            {
+                hashToDecks.Add(deckHashes, new List<IList<Deck>>());
+            }
+
+            hashToDecks[deckHashes].Add(
+                new List<Deck>()
+                {
+                    decks[0],
+                    decks[1]
+                }
+            );
         }
     }
 }
