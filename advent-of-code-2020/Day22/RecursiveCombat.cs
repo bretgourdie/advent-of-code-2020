@@ -19,10 +19,9 @@ namespace advent_of_code_2020.Day22
             if (!handHasBeenPlayed)
             {
                 recordHand(decks);
-                return true;
             }
 
-            return !handHasBeenPlayed || decks.All(deck => deck.HasCards());
+            return !handHasBeenPlayed && decks.All(deck => deck.HasCards());
         }
 
         private bool handsHaveBeenPlayed(Deck[] decks)
