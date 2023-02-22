@@ -1,15 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace advent_of_code_2020.Day22
 {
     public class RecursiveCombat : ICombatRules
     {
-        private readonly IDictionary<int, IList<IList<Deck>>> hashToDecks;
+        private readonly IDictionary<string, Deck[]> hashToDecks;
 
         public RecursiveCombat()
         {
-            hashToDecks = new Dictionary<int, IList<IList<Deck>>>();
+            hashToDecks = new Dictionary<string, Deck[]>();
         }
 
         public bool KeepPlayingGame(Deck[] decks)
@@ -26,34 +27,11 @@ namespace advent_of_code_2020.Day22
 
         private bool handsHaveBeenPlayed(Deck[] decks)
         {
-            var currentHash = decks.Sum(deck => deck.Cards().GetHashCode());
+            var currentHash = getDeckHash(decks);
 
-            if (hashToDecks.ContainsKey(currentHash))
-            {
-                var hands = hashToDecks[currentHash];
+            var decksInHash = hashToDecks.ContainsKey(currentHash);
 
-                foreach (var hand in hands)
-                {
-                    if (
-                        handMatchesDeck(hand[0].Cards(), decks[0].Cards())
-                        && handMatchesDeck(hand[1].Cards(), decks[1].Cards())
-                       )
-                    {
-                        return true;
-                    }
-                }
-            }
-
-
-
-            return false;
-        }
-
-        private bool handMatchesDeck(
-            IEnumerable<int> hand,
-            IEnumerable<int> deck)
-        {
-            return hand.SequenceEqual(deck);
+            return decksInHash;
         }
 
         public bool ShouldPlaySubGame(Deck[] decks, IList<int> playerCards)
@@ -98,20 +76,18 @@ namespace advent_of_code_2020.Day22
 
         private void recordHand(Deck[] decks)
         {
-            var deckHashes = decks.Sum(deck => deck.Cards().GetHashCode());
+            var deckHash = getDeckHash(decks);
 
-            if (!hashToDecks.ContainsKey(deckHashes))
+            if (!hashToDecks.ContainsKey(deckHash))
             {
-                hashToDecks.Add(deckHashes, new List<IList<Deck>>());
+                hashToDecks.Add(deckHash, decks);
             }
+        }
 
-            hashToDecks[deckHashes].Add(
-                new List<Deck>()
-                {
-                    decks[0],
-                    decks[1]
-                }
-            );
+        private string getDeckHash(Deck[] decks)
+        {
+            return
+                String.Join(";", (object[]) decks);
         }
     }
 }
