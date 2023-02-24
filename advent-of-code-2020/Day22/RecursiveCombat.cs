@@ -25,6 +25,26 @@ namespace advent_of_code_2020.Day22
             return !handHasBeenPlayed && decks.All(deck => deck.HasCards());
         }
 
+        public int GetBestPlayer(
+            Deck[] decks,
+            IList<int> playerCards,
+            Func<IList<int>, int> getHigherCardFunction)
+        {
+            if (shouldPlaySubGame(decks, playerCards))
+            {
+                var slicedDecks = sliceDecks(decks, playerCards);
+
+                var subgameResult = new Game().Play(slicedDecks, new RecursiveCombat());
+
+                return subgameResult.WinningDeck.PlayerZeroIndex;
+            }
+
+            else
+            {
+                return getHigherCardFunction(playerCards);
+            }
+        }
+
         private bool handsHaveBeenPlayed(Deck[] decks)
         {
             var currentHash = getDeckHash(decks);
@@ -34,7 +54,7 @@ namespace advent_of_code_2020.Day22
             return decksInHash;
         }
 
-        public bool ShouldPlaySubGame(Deck[] decks, IList<int> playerCards)
+        private bool shouldPlaySubGame(Deck[] decks, IList<int> playerCards)
         {
             for (int ii = 0; ii < decks.Length; ii++)
             {
@@ -69,11 +89,6 @@ namespace advent_of_code_2020.Day22
                 decks[1]);
         }
 
-        public ICombatRules ForSubGame()
-        {
-            return new RecursiveCombat();
-        }
-
         private void recordHand(Deck[] decks)
         {
             var deckHash = getDeckHash(decks);
@@ -88,6 +103,29 @@ namespace advent_of_code_2020.Day22
         {
             return
                 String.Join(";", (object[]) decks);
+        }
+
+        private Deck[] sliceDecks(
+            Deck[] decks,
+            IList<int> cards)
+        {
+            var slicedDecks = new Deck[decks.Length];
+
+            for (int ii = 0; ii < decks.Length; ii++)
+            {
+                var slicedDeckCards = decks[ii].Cards().Take(cards[ii]);
+
+                var slicedDeck = new Deck(decks[ii].Player);
+
+                foreach (var slicedDeckCard in slicedDeckCards)
+                {
+                    slicedDeck.Add(slicedDeckCard);
+                }
+
+                slicedDecks[ii] = slicedDeck;
+            }
+
+            return slicedDecks;
         }
     }
 }

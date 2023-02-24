@@ -8,7 +8,14 @@ namespace advent_of_code_2020.Day22
     {
 
         public bool KeepPlayingGame(Deck[] decks) => decks.All(deck => deck.HasCards());
-        public bool ShouldPlaySubGame(Deck[] decks, IList<int> playerCards) => false;
+
+        public int GetBestPlayer(
+            Deck[] decks,
+            IList<int> playerCards,
+            Func<IList<int>, int> getHigherCardFunction)
+        {
+            return getHigherCardFunction(playerCards);
+        }
 
         public WinningState GetWinningState(Deck[] decks)
         {
@@ -23,11 +30,6 @@ namespace advent_of_code_2020.Day22
             }
 
             throw new ArgumentException("Both decks have cards");
-        }
-
-        public ICombatRules ForSubGame()
-        {
-            throw new InvalidOperationException("Cannot call subgame from Combat");
         }
     }
 }

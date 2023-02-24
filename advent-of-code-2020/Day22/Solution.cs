@@ -20,9 +20,9 @@ namespace advent_of_code_2020.Day22
         {
             var decks = getDecks(inputData).ToArray();
 
-            var score = new Game().Play(decks, combatRules);
+            var state = new Game().Play(decks, combatRules);
 
-            Console.WriteLine($"The score is {score}");
+            Console.WriteLine($"The score is {state.WinningDeck.GetScore()}");
         }
 
         protected override void performWorkForProblem2(IList<string> inputData)
