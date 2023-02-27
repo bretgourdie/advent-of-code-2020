@@ -20,6 +20,18 @@ namespace advent_of_code_2020.Day20
 
         private Tile[,] sortTiles(IList<Tile> tiles)
         {
+            var tilesToSidesMatching = new Dictionary<Tile, int>();
+
+            foreach (var tile in tiles)
+            {
+                foreach (var tileToSidesMatching in tilesToSidesMatching)
+                {
+                    tile.CheckMatches(tileToSidesMatching.Key);
+                }
+
+                tilesToSidesMatching.Add(tile, 0);
+            }
+
             throw new NotImplementedException();
         }
 

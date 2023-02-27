@@ -10,6 +10,9 @@ namespace advent_of_code_2020.Day20
         public readonly int Id;
         public readonly IDictionary<Side, string> Sides;
 
+        public readonly IDictionary<Side, int> Matches;
+        public readonly IDictionary<Side, int> BackwardsMatches;
+
         private readonly char[,] image;
 
         public Tile(IList<string> contents)
@@ -19,6 +22,39 @@ namespace advent_of_code_2020.Day20
             image = parsePieceLines(contents.Skip(1).ToList());
 
             Sides = getSides(image);
+
+            Matches = initializeMatches();
+            BackwardsMatches = initializeMatches();
+        }
+
+        private IDictionary<Side, int> initializeMatches()
+        {
+            return new Dictionary<Side, int>()
+            {
+                {Side.Down, 0},
+                {Side.Left, 0},
+                {Side.Right, 0},
+                {Side.Up, 0}
+            };
+        }
+
+        public void CheckMatches(Tile other)
+        {
+            foreach (var otherEdge in other.Sides.Values)
+            {
+                foreach (var sideAndContent in Sides)
+                {
+                    if (sideAndContent.Value == otherEdge)
+                    {
+                        Matches[sideAndContent.Key] += 1;
+                    }
+
+                    if (sideAndContent.Value.Reverse() == otherEdge)
+                    {
+                        BackwardsMatches[sideAndContent.Key] += 1;
+                    }
+                }
+            }
         }
 
         private int parseIdLine(string idLine)
