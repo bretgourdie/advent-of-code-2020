@@ -124,6 +124,7 @@
     <Compile Include="Day19\Rule.cs" />
     <Compile Include="Day19\RuleSet.cs" />
     <Compile Include="Day19\Solution.cs" />
+    <Compile Include="Day20\Solution.cs" />
     <Compile Include="Day21\Recipe.cs" />
     <Compile Include="Day21\Solution.cs" />
     <Compile Include="Day22\Combat.cs" />
@@ -262,6 +263,12 @@
     </Content>
     <Content Include="Day19\input.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day20\example.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day20\input.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Day21\example.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
