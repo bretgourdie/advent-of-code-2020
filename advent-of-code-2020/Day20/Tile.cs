@@ -8,21 +8,17 @@ namespace advent_of_code_2020.Day20
     class Tile
     {
         public readonly int Id;
-        public readonly IDictionary<Side, int> SideHashes;
-        public readonly IDictionary<Side, int> ReversedSideHashes;
+        public readonly IDictionary<Side, string> Sides;
 
-        private readonly char[,] piece;
+        private readonly char[,] image;
 
         public Tile(IList<string> contents)
         {
             Id = parseIdLine(contents.First());
 
-            piece = parsePieceLines(contents.Skip(1).ToList());
+            image = parsePieceLines(contents.Skip(1).ToList());
 
-            //SideHashes = getSideHashes(piece);
-
-            //ReversedSideHashes = getReversedSideHashes(piece);
-
+            Sides = getSides(image);
         }
 
         private int parseIdLine(string idLine)
@@ -50,25 +46,44 @@ namespace advent_of_code_2020.Day20
             return grid;
         }
 
-        private IDictionary<Side, int> getSideHashes(char[,] piece)
+        private IDictionary<Side, string> getSides(char[,] piece)
         {
-            throw new NotImplementedException();
-        }
+            var sideDictionary = new Dictionary<Side, string>();
 
-        private IDictionary<Side, int> getReversedSideHashes(char[,] piece)
-        {
-            throw new NotImplementedException();
+            var edge = new StringBuilder();
+            var oppositeEdge = new StringBuilder();
+            for (int ii = 0; ii < piece.GetLength(0); ii++)
+            {
+                edge.Append(getFromGrid(ii, 0, piece));
+                oppositeEdge.Append(getFromGrid(ii, piece.GetLength(1) - 1, piece));
+            }
+
+            sideDictionary[Side.Left] = edge.ToString();
+            sideDictionary[Side.Right] = oppositeEdge.ToString();
+
+            edge = new StringBuilder();
+            oppositeEdge = new StringBuilder();
+            for (int jj = 0; jj < piece.GetLength(1); jj++)
+            {
+                edge.Append(getFromGrid(0, jj, piece));
+                oppositeEdge.Append(getFromGrid(piece.GetLength(0) - 1, jj, piece));
+            }
+
+            sideDictionary[Side.Up] = edge.ToString();
+            sideDictionary[Side.Down] = oppositeEdge.ToString();
+
+            return sideDictionary;
         }
 
         public override string ToString()
         {
             var sb = new StringBuilder();
 
-            for (int ii = 0; ii < piece.GetLength(0); ii++)
+            for (int ii = 0; ii < image.GetLength(0); ii++)
             {
-                for (int jj = 0; jj < piece.GetLength(1); jj++)
+                for (int jj = 0; jj < image.GetLength(1); jj++)
                 {
-                    sb.Append(getFromGrid(ii, jj, piece));
+                    sb.Append(getFromGrid(ii, jj, image));
                 }
 
                 sb.AppendLine();
