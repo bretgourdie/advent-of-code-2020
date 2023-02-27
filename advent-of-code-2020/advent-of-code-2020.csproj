@@ -127,6 +127,7 @@
     <Compile Include="Day20\Side.cs" />
     <Compile Include="Day20\Solution.cs" />
     <Compile Include="Day20\Tile.cs" />
+    <Compile Include="Day20\TileSorter.cs" />
     <Compile Include="Day21\Recipe.cs" />
     <Compile Include="Day21\Solution.cs" />
     <Compile Include="Day22\Combat.cs" />
