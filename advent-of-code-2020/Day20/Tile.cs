@@ -7,11 +7,9 @@ namespace advent_of_code_2020.Day20
 {
     class Tile
     {
-        public readonly int Id;
+        public readonly long Id;
         public readonly IDictionary<Side, string> Sides;
-
-        public readonly IDictionary<Side, int> Matches;
-        public readonly IDictionary<Side, int> BackwardsMatches;
+        public readonly IDictionary<Side, string> BackwardsSides;
 
         private readonly char[,] image;
 
@@ -22,44 +20,110 @@ namespace advent_of_code_2020.Day20
             image = parsePieceLines(contents.Skip(1).ToList());
 
             Sides = getSides(image);
-
-            Matches = initializeMatches();
-            BackwardsMatches = initializeMatches();
+            BackwardsSides = getBackwardsSides(image);
         }
 
-        private IDictionary<Side, int> initializeMatches()
+        public Tile(
+            long id,
+            char[,] image)
         {
-            return new Dictionary<Side, int>()
+            this.Id = id;
+            this.image = image;
+        }
+
+        private IDictionary<Side, string> getSides(char[,] image)
+        {
+            return new Dictionary<Side, string>()
             {
-                {Side.Down, 0},
-                {Side.Left, 0},
-                {Side.Right, 0},
-                {Side.Up, 0}
+                { Side.Up, top(image) },
+                { Side.Down, bottom(image) },
+                { Side.Left, left(image) },
+                { Side.Right, right(image) }
             };
         }
 
-        public void CheckMatches(Tile other)
+        private IDictionary<Side, string> getBackwardsSides(char[,] image)
         {
-            foreach (var otherEdge in other.Sides.Values)
-            {
-                foreach (var sideAndContent in Sides)
-                {
-                    if (sideAndContent.Value == otherEdge)
-                    {
-                        Matches[sideAndContent.Key] += 1;
-                    }
+            var flipped = flipHorizontal(image);
 
-                    if (sideAndContent.Value.Reverse() == otherEdge)
-                    {
-                        BackwardsMatches[sideAndContent.Key] += 1;
-                    }
-                }
-            }
+            return new Dictionary<Side, string>()
+            {
+                { Side.Up, top(flipped) },
+                { Side.Down, bottom(flipped) },
+                { Side.Left, left(flipped) },
+                { Side.Right, right(flipped) }
+            };
         }
 
-        private int parseIdLine(string idLine)
+        private string top(char[,] image)
         {
-            return int.Parse(
+            var sb = new StringBuilder();
+            var max = image.GetLength(0);
+            for (int ii = 0; ii < max; ii++)
+            {
+                sb.Append(getFromGrid(ii, 0, image));
+            }
+
+            return sb.ToString();
+        }
+
+        private string bottom(char[,] image)
+        {
+            var sb = new StringBuilder();
+            var max = image.GetLength(0);
+            for (int ii = 0; ii < max; ii++)
+            {
+                sb.Append(getFromGrid(ii, max - 1, image));
+            }
+
+            return sb.ToString();
+        }
+
+        private string left(char[,] image)
+        {
+            var sb = new StringBuilder();
+            var max = image.GetLength(1);
+            for (int ii = 0; ii < max; ii++)
+            {
+                sb.Append(getFromGrid(0, ii, image));
+            }
+
+            return sb.ToString();
+        }
+
+        private string right(char[,] image)
+        {
+            var sb = new StringBuilder();
+            var max = image.GetLength(1);
+            for (int ii = 0; ii < max; ii++)
+            {
+                sb.Append(getFromGrid(max - 1, ii, image));
+            }
+
+            return sb.ToString();
+        }
+
+        private char[,] flipHorizontal(char[,] image)
+        {
+            var xMax = image.GetLength(0);
+            var yMax = image.GetLength(1);
+
+            var flip = new char[xMax, yMax];
+
+            for (int x = 0; x < xMax; x++)
+            {
+                for (int y = 0; y < yMax; y++)
+                {
+                    assignToGrid(xMax - 1 - x, y, getFromGrid(x, y, image), flip);
+                }
+            }
+
+            return flip;
+        }
+
+        private long parseIdLine(string idLine)
+        {
+            return long.Parse(
                 idLine.Replace("Tile ", String.Empty)
                     .Replace(":", String.Empty)
             );
@@ -75,40 +139,11 @@ namespace advent_of_code_2020.Day20
             {
                 for (int jj = 0; jj < lines[ii].Length; jj++)
                 {
-                    assignToGrid(ii, jj, lines[ii][jj], grid);
+                    assignToGrid(jj, ii, lines[ii][jj], grid);
                 }
             }
 
             return grid;
-        }
-
-        private IDictionary<Side, string> getSides(char[,] piece)
-        {
-            var sideDictionary = new Dictionary<Side, string>();
-
-            var edge = new StringBuilder();
-            var oppositeEdge = new StringBuilder();
-            for (int ii = 0; ii < piece.GetLength(0); ii++)
-            {
-                edge.Append(getFromGrid(ii, 0, piece));
-                oppositeEdge.Append(getFromGrid(ii, piece.GetLength(1) - 1, piece));
-            }
-
-            sideDictionary[Side.Left] = edge.ToString();
-            sideDictionary[Side.Right] = oppositeEdge.ToString();
-
-            edge = new StringBuilder();
-            oppositeEdge = new StringBuilder();
-            for (int jj = 0; jj < piece.GetLength(1); jj++)
-            {
-                edge.Append(getFromGrid(0, jj, piece));
-                oppositeEdge.Append(getFromGrid(piece.GetLength(0) - 1, jj, piece));
-            }
-
-            sideDictionary[Side.Up] = edge.ToString();
-            sideDictionary[Side.Down] = oppositeEdge.ToString();
-
-            return sideDictionary;
         }
 
         public override string ToString()
@@ -119,7 +154,7 @@ namespace advent_of_code_2020.Day20
             {
                 for (int jj = 0; jj < image.GetLength(1); jj++)
                 {
-                    sb.Append(getFromGrid(ii, jj, image));
+                    sb.Append(getFromGrid(jj, ii, image));
                 }
 
                 sb.AppendLine();
@@ -134,12 +169,12 @@ namespace advent_of_code_2020.Day20
 
         private void assignToGrid(int x, int y, char letter, char[,] grid)
         {
-            grid[x, y] = letter;
+            grid[y, x] = letter;
         }
 
         private char getFromGrid(int x, int y, char[,] grid)
         {
-            return grid[x, y];
+            return grid[y, x];
         }
     }
 }
