@@ -5,6 +5,20 @@ namespace advent_of_code_2020.Day20
 {
     class TileSorter
     {
+        private List<Rotation> rotations = new List<Rotation>()
+        {
+            Rotation.NoRotation,
+            Rotation.Clockwise90Degrees,
+            Rotation.Clockwise180Degrees,
+            Rotation.Clockwise270Degrees
+        };
+
+        private List<Reflection> reflections = new List<Reflection>()
+        {
+            Reflection.None,
+            Reflection.Horizontal
+        };
+
         public long GetCornerProduct(IList<string> input)
         {
             var tiles = parseTiles(input);
@@ -20,18 +34,18 @@ namespace advent_of_code_2020.Day20
 
         private Tile[,] sortTiles(IList<Tile> tiles)
         {
-            var tilesToSidesMatching = new Dictionary<Tile, int>();
+            int dimension = (int)Math.Sqrt(tiles.Count);
+            Tile[,] grid = new Tile[dimension, dimension];
 
-            foreach (var tile in tiles)
-            {
-                foreach (var tileToSidesMatching in tilesToSidesMatching)
-                {
-                    tile.CheckMatches(tileToSidesMatching.Key);
-                }
+            grid = sortTiles(new Queue<Tile>(tiles), grid);
 
-                tilesToSidesMatching.Add(tile, 0);
-            }
+            return grid;
+        }
 
+        private Tile[,] sortTiles(
+            Queue<Tile> tiles,
+            Tile[,] grid)
+        {
             throw new NotImplementedException();
         }
 
