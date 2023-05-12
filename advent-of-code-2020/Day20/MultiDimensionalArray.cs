@@ -26,7 +26,16 @@ namespace advent_of_code_2020.Day20
 
         public static T GetFromGrid<T>(int x, int y, T[,] grid)
         {
-            return grid[y, x];
+            if (0 <= x && x < grid.GetLength(0)
+                       && 0 <= y && y < grid.GetLength(1))
+            {
+                return (T)grid[y, x];
+            }
+
+            else
+            {
+                return default(T);
+            }
         }
 
         public static void AssignToGrid<T>(int x, int y, T element, T[,] grid)

@@ -26,19 +26,18 @@ namespace advent_of_code_2020.Day20
             this.image = image;
         }
 
-        public static Tile FromPermutation(
-            Tile tile,
+        public Tile FromPermutation(
             Rotation rotation,
             Reflection reflection,
             IList<Rotation> rotations)
         {
-            var baseImage = tile.image;
+            var baseImage = this.image;
 
             var rotatedImage = RotateGridByDegrees(baseImage, rotation, rotations);
 
             var rotatedAndReflectedImage = ReflectGrid(rotatedImage, reflection);
 
-            return new Tile(tile.Id, rotatedAndReflectedImage);
+            return new Tile(this.Id, rotatedAndReflectedImage);
         }
 
         public string Top()
