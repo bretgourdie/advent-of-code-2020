@@ -9,7 +9,7 @@ namespace advent_of_code_2020.Day20
     {
         private List<Rotation> rotations = new List<Rotation>()
         {
-            Rotation.NoRotation,
+            Rotation.None,
             Rotation.Clockwise90Degrees,
             Rotation.Clockwise180Degrees,
             Rotation.Clockwise270Degrees
@@ -29,9 +29,9 @@ namespace advent_of_code_2020.Day20
 
             return
                 grid[0, 0].Id
-                * grid[0, grid.GetLength(1)].Id
-                * grid[grid.GetLength(1), 0].Id
-                * grid[grid.GetLength(0), grid.GetLength(1)].Id;
+                * grid[0, grid.GetLength(1) - 1].Id
+                * grid[grid.GetLength(1) - 1, 0].Id
+                * grid[grid.GetLength(0) - 1, grid.GetLength(1) - 1].Id;
         }
 
         private Tile[,] sortTiles(IList<Tile> tiles)
@@ -48,13 +48,18 @@ namespace advent_of_code_2020.Day20
             IList<Tile> tiles,
             Tile[,] grid)
         {
-            foreach (var tile in tiles)
+            if (!tiles.Any())
             {
-                for (int x = 0; x < grid.GetLength(0); x++)
+                return grid;
+            }
+
+            for (int x = 0; x < grid.GetLength(0); x++)
+            {
+                for (int y = 0; y < grid.GetLength(1); y++)
                 {
-                    for (int y = 0; y < grid.GetLength(1); y++)
+                    if (GetFromGrid(x, y, grid) == null && isAppropriatePlacement(x, y, grid))
                     {
-                        if (GetFromGrid(x, y, grid) == null)
+                        foreach (var tile in tiles)
                         {
                             foreach (var rotation in rotations)
                             {
@@ -89,13 +94,27 @@ namespace advent_of_code_2020.Day20
 
             return null;
         }
+        private bool isAppropriatePlacement(int x, int y, Tile[,] grid)
+        {
+            var tiles = from Tile tile in grid
+                where tile != null
+                select tile;
+
+            var tileIsAlreadyThere = GetFromGrid(x, y, grid) != null;
+
+            var atLeastOneTile = tiles.Any();
+
+            var coordinatesAtStart = x == 0 && y == 0;
+
+            return !tileIsAlreadyThere && (atLeastOneTile || coordinatesAtStart);
+        }
 
         private bool fits(Tile tile, int x, int y, Tile[,] grid)
         {
             var leftTile = GetFromGrid(x - 1, y, grid);
             if (leftTile != null)
             {
-                if (tile.Left() != leftTile.Right())
+                if (tile.Left != leftTile.Right)
                 {
                     return false;
                 }
@@ -104,7 +123,7 @@ namespace advent_of_code_2020.Day20
             var rightTile = GetFromGrid(x + 1, y, grid);
             if (rightTile != null)
             {
-                if (tile.Right() != rightTile.Left())
+                if (tile.Right != rightTile.Left)
                 {
                     return false;
                 }
@@ -113,7 +132,7 @@ namespace advent_of_code_2020.Day20
             var downTile = GetFromGrid(x, y + 1, grid);
             if (downTile != null)
             {
-                if (tile.Bottom() != downTile.Top())
+                if (tile.Bottom != downTile.Top)
                 {
                     return false;
                 }
@@ -122,10 +141,19 @@ namespace advent_of_code_2020.Day20
             var upTile = GetFromGrid(x, y - 1, grid);
             if (upTile != null)
             {
-                if (tile.Top() != upTile.Bottom())
+                if (tile.Top != upTile.Bottom)
                 {
                     return false;
                 }
+            }
+
+            if (leftTile == null
+                && rightTile == null
+                && upTile == null
+                && downTile == null
+                && AnyAssigned(grid))
+            {
+                return false;
             }
 
             return true;
@@ -150,8 +178,6 @@ namespace advent_of_code_2020.Day20
                     tileContent.Add(line);
                 }
             }
-
-            tiles.Add(new Tile(tileContent));
 
             return tiles;
         }

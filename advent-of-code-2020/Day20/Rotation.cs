@@ -2,7 +2,7 @@
 {
     enum Rotation
     {
-        NoRotation,
+        None,
         Clockwise90Degrees,
         Clockwise180Degrees,
         Clockwise270Degrees

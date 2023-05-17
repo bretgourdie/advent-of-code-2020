@@ -11,19 +11,37 @@ namespace advent_of_code_2020.Day20
         public readonly long Id;
         private readonly char[,] image;
 
-        public Tile(IList<string> contents)
-        {
-            Id = parseIdLine(contents.First());
+        public readonly Rotation Rotation;
+        public readonly Reflection Reflection;
 
-            image = CreateGridFromLines(contents.Skip(1).ToList(), x => x);
-        }
+        public readonly string Top;
+        public readonly string Bottom;
+        public readonly string Left;
+        public readonly string Right;
+
+        public Tile(IList<string> contents) :
+            this(
+                parseIdLine(contents.First()),
+                CreateGridFromLines(contents.Skip(1).ToList(), x => x),
+                Rotation.None,
+                Reflection.None
+            ) {}
 
         public Tile(
             long id,
-            char[,] image)
+            char[,] image,
+            Rotation rotation,
+            Reflection reflection)
         {
             this.Id = id;
             this.image = image;
+            this.Rotation = rotation;
+            this.Reflection = reflection;
+
+            this.Top = top(image);
+            this.Bottom = bottom(image);
+            this.Left = left(image);
+            this.Right = right(image);
         }
 
         public Tile FromPermutation(
@@ -31,58 +49,62 @@ namespace advent_of_code_2020.Day20
             Reflection reflection,
             IList<Rotation> rotations)
         {
-            var baseImage = this.image;
+            var baseImage = CopyGrid(this.image);
 
             var rotatedImage = RotateGridByDegrees(baseImage, rotation, rotations);
 
             var rotatedAndReflectedImage = ReflectGrid(rotatedImage, reflection);
 
-            return new Tile(this.Id, rotatedAndReflectedImage);
+            return new Tile(
+                this.Id,
+                rotatedAndReflectedImage,
+                rotation,
+                reflection);
         }
 
-        public string Top()
+        private string top(char[,] grid)
         {
             var sb = new StringBuilder();
-            var max = image.GetLength(0);
+            var max = grid.GetLength(0);
             for (int ii = 0; ii < max; ii++)
             {
-                sb.Append(GetFromGrid(ii, 0, image));
+                sb.Append(GetFromGrid(ii, 0, grid));
             }
 
             return sb.ToString();
         }
 
-        public string Bottom()
+        private string bottom(char[,] grid)
         {
             var sb = new StringBuilder();
-            var max = image.GetLength(0);
+            var max = grid.GetLength(0);
             for (int ii = 0; ii < max; ii++)
             {
-                sb.Append(GetFromGrid(ii, max - 1, image));
+                sb.Append(GetFromGrid(ii, max - 1, grid));
             }
 
             return sb.ToString();
         }
 
-        public string Left()
+        private string left(char[,] grid)
         {
             var sb = new StringBuilder();
-            var max = image.GetLength(1);
+            var max = grid.GetLength(1);
             for (int ii = 0; ii < max; ii++)
             {
-                sb.Append(GetFromGrid(0, ii, image));
+                sb.Append(GetFromGrid(0, ii, grid));
             }
 
             return sb.ToString();
         }
 
-        public string Right()
+        private string right(char[,] grid)
         {
             var sb = new StringBuilder();
-            var max = image.GetLength(1);
+            var max = grid.GetLength(1);
             for (int ii = 0; ii < max; ii++)
             {
-                sb.Append(GetFromGrid(max - 1, ii, image));
+                sb.Append(GetFromGrid(max - 1, ii, grid));
             }
 
             return sb.ToString();
@@ -90,7 +112,7 @@ namespace advent_of_code_2020.Day20
 
 
 
-        private long parseIdLine(string idLine)
+        private static long parseIdLine(string idLine)
         {
             return long.Parse(
                 idLine.Replace("Tile ", String.Empty)
@@ -99,6 +121,11 @@ namespace advent_of_code_2020.Day20
         }
 
         public override string ToString()
+        {
+            return $"Tile {Id} Rotation.{Rotation} Reflection.{Reflection}";
+        }
+
+        public string PrintIdAndGrid()
         {
             var sb = new StringBuilder();
 
