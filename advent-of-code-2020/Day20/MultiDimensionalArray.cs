@@ -24,6 +24,22 @@ namespace advent_of_code_2020.Day20
             return flip;
         }
 
+        public static bool AnyAssigned<T>(T[,] grid)
+        {
+            for (int ii = 0; ii < grid.GetLength(0); ii++)
+            {
+                for (int jj = 0; jj < grid.GetLength(1); jj++)
+                {
+                    if (grid[ii, jj] != null)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         public static T GetFromGrid<T>(int x, int y, T[,] grid)
         {
             if (0 <= x && x < grid.GetLength(0)
