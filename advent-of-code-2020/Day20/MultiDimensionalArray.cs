@@ -106,16 +106,7 @@ namespace advent_of_code_2020.Day20
 
         public static T[,] CopyGrid<T>(T[,] referenceImage)
         {
-            var newGrid = new T[referenceImage.GetLength(0), referenceImage.GetLength(1)];
-            for (int ii = 0; ii < referenceImage.GetLength(0); ii++)
-            {
-                for (int jj = 0; jj < referenceImage.GetLength(1); jj++)
-                {
-                    newGrid[ii, jj] = referenceImage[ii, jj];
-                }
-            }
-
-            return newGrid;
+            return (T[,])referenceImage.Clone();
         }
 
         public static T[,] CreateGridFromLines<T>(IList<string> lines, Func<char, T> conversion)
