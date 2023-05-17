@@ -7,7 +7,9 @@ namespace advent_of_code_2020.Day20
     {
         protected override void performWorkForProblem1(IList<string> inputData)
         {
-            new TileSorter().GetCornerProduct(inputData);
+            var cornerProduct = new TileSorter().GetCornerProduct(inputData);
+
+            Console.WriteLine($"The corner product is {cornerProduct}");
         }
 
         protected override void performWorkForProblem2(IList<string> inputData)
