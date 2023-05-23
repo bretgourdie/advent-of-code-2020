@@ -21,6 +21,8 @@ namespace advent_of_code_2020.Day20
             Reflection.Horizontal
         };
 
+        private IDictionary<long, IList<Tile>> precomputedPermutationsByTile;
+
         public long GetCornerProduct(IList<string> input)
         {
             var tiles = parseTiles(input);
@@ -39,9 +41,32 @@ namespace advent_of_code_2020.Day20
             int dimension = (int)Math.Sqrt(tiles.Count);
             Tile[,] grid = new Tile[dimension, dimension];
 
+            precomputedPermutationsByTile = precomputeTiles(tiles);
+
             grid = sortTiles(new List<Tile>(tiles), grid);
 
             return grid;
+        }
+
+        private IDictionary<long, IList<Tile>> precomputeTiles(IList<Tile> baseTiles)
+        {
+            var dict = new Dictionary<long, IList<Tile>>();
+            foreach (var baseTile in baseTiles)
+            {
+                var list = new List<Tile>();
+
+                foreach (var reflection in reflections)
+                {
+                    foreach (var rotation in rotations)
+                    {
+                        list.Add(baseTile.FromPermutation(rotation, reflection, rotations));
+                    }
+                }
+
+                dict[baseTile.Id] = list;
+            }
+
+            return dict;
         }
 
         private Tile[,] sortTiles(
@@ -61,29 +86,24 @@ namespace advent_of_code_2020.Day20
                     {
                         foreach (var tile in tiles)
                         {
-                            foreach (var rotation in rotations)
+                            foreach (var permutation in precomputedPermutationsByTile[tile.Id])
                             {
-                                foreach (var reflection in reflections)
+                                if (fits(permutation, x, y, grid))
                                 {
-                                    var permutation = tile.FromPermutation(rotation, reflection, rotations);
+                                    AssignToGrid(x, y, permutation, grid);
 
-                                    if (fits(permutation, x, y, grid))
+                                    var newGrid = sortTiles(
+                                        tiles.Where(other => other.Id != permutation.Id).ToList(),
+                                        grid);
+
+                                    if (newGrid != null)
                                     {
-                                        AssignToGrid(x, y, permutation, grid);
+                                        return grid;
+                                    }
 
-                                        var newGrid = sortTiles(
-                                            tiles.Where(other => other.Id != permutation.Id).ToList(),
-                                            grid);
-
-                                        if (newGrid != null)
-                                        {
-                                            return grid;
-                                        }
-
-                                        else
-                                        {
-                                            AssignToGrid(x, y, null, grid);
-                                        }
+                                    else
+                                    {
+                                        AssignToGrid(x, y, null, grid);
                                     }
                                 }
                             }
