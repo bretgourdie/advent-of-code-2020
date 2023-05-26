@@ -19,6 +19,8 @@ namespace advent_of_code_2020.Day20
         public readonly string Left;
         public readonly string Right;
 
+        public readonly IDictionary<Side, string> Sides;
+
         public Tile(IList<string> contents) :
             this(
                 parseIdLine(contents.First()),
@@ -42,6 +44,14 @@ namespace advent_of_code_2020.Day20
             this.Bottom = bottom(image);
             this.Left = left(image);
             this.Right = right(image);
+
+            Sides = new Dictionary<Side, string>()
+            {
+                { Side.Left, this.Left },
+                { Side.Right, this.Right },
+                { Side.Down, this.Bottom },
+                { Side.Up, this.Top }
+            };
         }
 
         public Tile FromPermutation(
