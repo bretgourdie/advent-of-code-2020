@@ -14,7 +14,9 @@ namespace advent_of_code_2020.Day20
 
         protected override void performWorkForProblem2(IList<string> inputData)
         {
-            throw new NotImplementedException();
+            var waterRoughness = new TileSorter().GetWaterRoughness(inputData);
+
+            Console.WriteLine($"The water roughness is {waterRoughness}");
         }
     }
 }

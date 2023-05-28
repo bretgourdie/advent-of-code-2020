@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using static advent_of_code_2020.Day20.MultiDimensionalArray;
 
 namespace advent_of_code_2020.Day20
@@ -42,12 +41,12 @@ namespace advent_of_code_2020.Day20
         {
             var tiles = parseTiles(input);
 
-            var cornerTiles = determineCornerTiles(tiles);
+            var cornerTiles = getCornerTiles(tiles);
 
             return cornerTiles.Aggregate((long) 1, (number, tile) => number * tile.Id);
         }
 
-        private IList<Tile> determineCornerTiles(IList<Tile> tiles)
+        private IList<Tile> getCornerTiles(IList<Tile> tiles)
         {
             var tilesByMatches = new Dictionary<Tile, int>();
 
@@ -98,54 +97,51 @@ namespace advent_of_code_2020.Day20
             return false;
         }
 
-        public long GetDragons(IList<string> input)
+        public long GetWaterRoughness(IList<string> input)
         {
             var tiles = parseTiles(input);
 
-            var grid = sortTiles(tiles);
+            var cornerTiles = getCornerTiles(tiles);
 
-            return
-                grid[0, 0].Id
-                * grid[0, grid.GetLength(1) - 1].Id
-                * grid[grid.GetLength(1) - 1, 0].Id
-                * grid[grid.GetLength(0) - 1, grid.GetLength(1) - 1].Id;
+            var grid = sortTiles(tiles, cornerTiles);
+
+            var gaplessImage = removeGaps(grid);
+
+            var roughness = determineRoughness(gaplessImage);
+
+            return roughness;
         }
 
-        private Tile[,] sortTiles(IList<Tile> tiles)
+        private char[,] removeGaps(Tile[,] sortedImage)
         {
-            int dimension = (int)Math.Sqrt(tiles.Count);
+            throw new NotImplementedException();
+        }
+
+        private long determineRoughness(char[,] gaplessImage)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Tile[,] sortTiles(IList<Tile> allTiles, IList<Tile> cornerPieces)
+        {
+            int dimension = (int)Math.Sqrt(allTiles.Count);
             Tile[,] grid = new Tile[dimension, dimension];
 
-            var precomputedTiles = precomputeTiles(tiles);
+            var nonCornerPieces = separateCornerPieces(allTiles, cornerPieces);
 
-            var precomputedTileEdgeHashes = precomputeTileEdgeHashes(precomputedTiles);
-
-            grid = sortTiles(precomputeTiles(tiles), precomputedTileEdgeHashes, grid);
+            grid = sortTiles(
+                precomputeTiles(nonCornerPieces),
+                precomputeTiles(cornerPieces),
+                grid);
 
             return grid;
         }
 
-        private IDictionary<int, IList<Tile>> precomputeTileEdgeHashes(IList<Tile> tilePermuations)
+        private IList<Tile> separateCornerPieces(IList<Tile> allTiles, IList<Tile> cornerPieces)
         {
-            var dict = new Dictionary<int, IList<Tile>>();
-
-            foreach (var tile in tilePermuations)
-            {
-                foreach (var sideAndEdge in tile.Sides)
-                {
-                    var hash = sideAndEdge.Value.GetHashCode();
-                    if (!dict.ContainsKey(hash))
-                    {
-                        dict.Add(hash, new List<Tile>());
-                    }
-
-                    var tilesForHash = dict[hash];
-
-                    tilesForHash.Add(tile);
-                }
-            }
-
-            return dict;
+            return allTiles
+                .Where(tile => !cornerPieces.Contains(tile))
+                .ToList();
         }
 
         private IList<Tile> precomputeTiles(IList<Tile> baseTiles)
@@ -166,11 +162,11 @@ namespace advent_of_code_2020.Day20
         }
 
         private Tile[,] sortTiles(
-            IList<Tile> tiles,
-            IDictionary<int, IList<Tile>> hashToTiles,
+            IList<Tile> nonCornerPieces,
+            IList<Tile> cornerPieces,
             Tile[,] grid)
         {
-            if (!tiles.Any())
+            if (!nonCornerPieces.Any() && !cornerPieces.Any())
             {
                 return grid;
             }
@@ -181,37 +177,7 @@ namespace advent_of_code_2020.Day20
                 {
                     if (GetFromGrid(x, y, grid) == null && isAppropriatePlacement(x, y, grid))
                     {
-                        IList<Tile> tilesToUse;
-
-                        if (AnyAssigned(grid))
-                        {
-                            var neededSides = getNeededSides(x, y, grid);
-
-                            var tileSet = new HashSet<Tile>();
-
-                            foreach (var neededSide in neededSides)
-                            {
-                                if (hashToTiles.ContainsKey(neededSide.GetHashCode()))
-                                {
-                                    if (tileSet.Any())
-                                    {
-                                        tileSet.IntersectWith(hashToTiles[neededSide.GetHashCode()]);
-                                    }
-
-                                    else
-                                    {
-                                        tileSet.UnionWith(hashToTiles[neededSide.GetHashCode()]);
-                                    }
-                                }
-                            }
-
-                            tilesToUse = tileSet.ToList();
-                        }
-
-                        else
-                        {
-                            tilesToUse = tiles;
-                        }
+                        IList<Tile> tilesToUse = getTilesToUse(nonCornerPieces, cornerPieces, x, y, grid.GetLength(0));
 
                         foreach (var tile in tilesToUse)
                         {
@@ -220,8 +186,12 @@ namespace advent_of_code_2020.Day20
                                 AssignToGrid(x, y, tile, grid);
 
                                 var newGrid = sortTiles(
-                                    tiles.Where(other => other.Id != tile.Id).ToList(),
-                                    hashToTiles,
+                                    isAppraisingCorner(x, y, grid.GetLength(0))
+                                        ? nonCornerPieces
+                                        : nonCornerPieces.Where(other => other.Id != tile.Id).ToList(),
+                                    isAppraisingCorner(x, y, grid.GetLength(0))
+                                        ? cornerPieces.Where(other => other.Id != tile.Id).ToList()
+                                        : cornerPieces,
                                     grid);
 
                                 if (newGrid != null)
@@ -242,19 +212,23 @@ namespace advent_of_code_2020.Day20
             return null;
         }
 
-        private IList<string> getNeededSides(int x, int y, Tile[,] grid)
+        private bool isAppraisingCorner(int x, int y, int gridLength)
         {
-            var sideList = new List<string>();
+            return
+                (x == 0 || x == gridLength - 1) && (y == 0 || y == gridLength - 1);
+        }
 
-            var neighborSideAndTiles = getNeighborTiles(x, y, grid);
-
-            foreach (var neighborSideAndTile in neighborSideAndTiles)
+        private IList<Tile> getTilesToUse(IList<Tile> nonCornerPieces, IList<Tile> cornerPieces, int x, int y, int gridLength)
+        {
+            if (isAppraisingCorner(x, y, gridLength))
             {
-                var neighborReferenceSide = this.oppositeSide[neighborSideAndTile.Key];
-                sideList.Add(neighborSideAndTile.Value.Sides[neighborReferenceSide]);
+                return cornerPieces;
             }
 
-            return sideList;
+            else
+            {
+                return nonCornerPieces;
+            }
         }
 
         private IList<KeyValuePair<Side, Tile>> getNeighborTiles(int x, int y, Tile[,] grid)
