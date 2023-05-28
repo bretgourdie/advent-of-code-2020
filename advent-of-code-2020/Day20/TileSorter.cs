@@ -42,6 +42,66 @@ namespace advent_of_code_2020.Day20
         {
             var tiles = parseTiles(input);
 
+            var cornerTiles = determineCornerTiles(tiles);
+
+            return cornerTiles.Aggregate((long) 1, (number, tile) => number * tile.Id);
+        }
+
+        private IList<Tile> determineCornerTiles(IList<Tile> tiles)
+        {
+            var tilesByMatches = new Dictionary<Tile, int>();
+
+            foreach (var tile in tiles)
+            {
+                if (!tilesByMatches.ContainsKey(tile))
+                {
+                    tilesByMatches[tile] = 0;
+                }
+
+                foreach (var other in tiles)
+                {
+                    if (tile.Id != other.Id)
+                    {
+                        if (oneEdgeMatches(tile, other))
+                        {
+                            tilesByMatches[tile] += 1;
+                        }
+                    }
+                }
+            }
+
+            var cornerPieces = tilesByMatches
+                .Where(tileAndMatch => tileAndMatch.Value == 2)
+                .Select(tileAndMatch => tileAndMatch.Key)
+                .ToList();
+
+            return cornerPieces;
+        }
+
+        private bool oneEdgeMatches(Tile tile, Tile other)
+        {
+            int matches = 0;
+
+            foreach (var edge in tile.Sides.Values)
+            {
+                var reversedEdge = new string(edge.Reverse().ToArray());
+
+                foreach (var otherEdge in other.Sides.Values)
+                {
+                    if (edge == otherEdge || reversedEdge == otherEdge)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public long GetDragons(IList<string> input)
+        {
+            var tiles = parseTiles(input);
+
             var grid = sortTiles(tiles);
 
             return
