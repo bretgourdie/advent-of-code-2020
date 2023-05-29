@@ -114,7 +114,41 @@ namespace advent_of_code_2020.Day20
 
         private char[,] removeGaps(Tile[,] sortedImage)
         {
-            throw new NotImplementedException();
+            var dimension = sortedImage.GetLength(0) * (sortedImage[0,0].Image.GetLength(0) - 2);
+            char[,] gaplessImage = new char[dimension, dimension];
+
+            for (int x = 0; x < sortedImage.GetLength(0); x++)
+            {
+                for (int y = 0; y < sortedImage.GetLength(1); y++)
+                {
+                    writeBorderless(x, y, GetFromGrid(x, y, sortedImage), gaplessImage);
+                }
+            }
+
+            return gaplessImage;
+        }
+
+        private void writeBorderless(
+            int x,
+            int y,
+            Tile tile,
+            char[,] gaplessImage)
+        {
+            var xGaplessReference = x * (tile.Image.GetLength(0) - 2);
+            var yGaplessReference = y * (tile.Image.GetLength(1) - 2);
+
+            for (int xTileReference = 1; xTileReference < tile.Image.GetLength(0) - 1; xTileReference++)
+            {
+                for (int yTileReference = 1; yTileReference < tile.Image.GetLength(1) - 1; yTileReference++)
+                {
+                    var content = GetFromGrid(xTileReference, yTileReference, tile.Image);
+
+                    var xGaplessCoordinate = xGaplessReference + xTileReference - 1;
+                    var yGaplessCoordinate = yGaplessReference + yTileReference - 1;
+
+                    AssignToGrid(xGaplessCoordinate, yGaplessCoordinate, content, gaplessImage);
+                }
+            }
         }
 
         private long determineRoughness(char[,] gaplessImage)

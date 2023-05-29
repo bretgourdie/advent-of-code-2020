@@ -9,7 +9,7 @@ namespace advent_of_code_2020.Day20
     class Tile
     {
         public readonly long Id;
-        private readonly char[,] image;
+        public readonly char[,] Image;
 
         public readonly Rotation Rotation;
         public readonly Reflection Reflection;
@@ -36,7 +36,7 @@ namespace advent_of_code_2020.Day20
             Reflection reflection)
         {
             this.Id = id;
-            this.image = image;
+            this.Image = image;
             this.Rotation = rotation;
             this.Reflection = reflection;
 
@@ -59,7 +59,7 @@ namespace advent_of_code_2020.Day20
             Reflection reflection,
             IList<Rotation> rotations)
         {
-            var baseImage = CopyGrid(this.image);
+            var baseImage = CopyGrid(this.Image);
 
             var rotatedImage = RotateGridByDegrees(baseImage, rotation, rotations);
 
@@ -139,11 +139,11 @@ namespace advent_of_code_2020.Day20
         {
             var sb = new StringBuilder();
 
-            for (int ii = 0; ii < image.GetLength(0); ii++)
+            for (int ii = 0; ii < Image.GetLength(0); ii++)
             {
-                for (int jj = 0; jj < image.GetLength(1); jj++)
+                for (int jj = 0; jj < Image.GetLength(1); jj++)
                 {
-                    sb.Append(GetFromGrid(jj, ii, image));
+                    sb.Append(GetFromGrid(jj, ii, Image));
                 }
 
                 sb.AppendLine();
