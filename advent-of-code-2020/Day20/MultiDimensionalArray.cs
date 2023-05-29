@@ -42,8 +42,8 @@ namespace advent_of_code_2020.Day20
 
         public static T GetFromGrid<T>(int x, int y, T[,] grid)
         {
-            if (0 <= x && x < grid.GetLength(0)
-                       && 0 <= y && y < grid.GetLength(1))
+            if (0 <= x && x < grid.GetLength(1)
+                       && 0 <= y && y < grid.GetLength(0))
             {
                 return (T)grid[y, x];
             }
@@ -113,7 +113,9 @@ namespace advent_of_code_2020.Day20
         {
             var length = lines.First().Length;
 
-            var grid = new T[length, length];
+            var width = lines.Count;
+
+            var grid = new T[width, length];
 
             for (int ii = 0; ii < lines.Count; ii++)
             {
