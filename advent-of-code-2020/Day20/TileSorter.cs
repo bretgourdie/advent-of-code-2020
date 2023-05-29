@@ -7,6 +7,13 @@ namespace advent_of_code_2020.Day20
 {
     class TileSorter
     {
+        private readonly IList<string> seaMonsterTemplate = new List<string>()
+        {
+            {"                  # "},
+            {"#    ##    ##    ###"},
+            {"#  #  #  #  #  #    "}
+        };
+
         private IDictionary<Side, Side> oppositeSide = new Dictionary<Side, Side>()
         {
             {Side.Left, Side.Right},
@@ -107,9 +114,62 @@ namespace advent_of_code_2020.Day20
 
             var gaplessImage = removeGaps(grid);
 
-            var roughness = determineRoughness(gaplessImage);
+            var seamonsterImage = spotSeaMonsters(gaplessImage);
+
+            var roughness = determineRoughness(seamonsterImage);
 
             return roughness;
+        }
+
+        private char[,] spotSeaMonsters(char[,] gaplessImage)
+        {
+            var seamonsterGrid = CreateGridFromLines(seaMonsterTemplate, x => x);
+
+            int seamonsters = 0;
+
+            while (seamonsters <= 0)
+            {
+                for (int y = 0; y < gaplessImage.GetLength(1) - seamonsterGrid.GetLength(1) - 1; y++)
+                {
+                    for (int x = 0; x < gaplessImage.GetLength(0) - seamonsterGrid.GetLength(0) - 1; x++)
+                    {
+                        if (isSeamonster(x, y, gaplessImage, seamonsterGrid))
+                        {
+                            seamonsters += 1;
+                        }
+                    }
+                }
+
+                if (seamonsters <= 0)
+                {
+                    RotateGridByDegrees(gaplessImage, Rotation.Clockwise90Degrees, rotations);
+                }
+            }
+
+            throw new NotImplementedException();
+        }
+
+        private bool isSeamonster(int x, int y, char[,] gaplessImage, char[,] seamonsterGrid)
+        {
+            for (int ySeamonster = y; ySeamonster < seamonsterGrid.GetLength(1) + y; ySeamonster++)
+            {
+                for (int xSeamonster = x; xSeamonster < seamonsterGrid.GetLength(0) + x; xSeamonster++)
+                {
+                    var reference = GetFromGrid(xSeamonster - x, ySeamonster - y, seamonsterGrid);
+
+                    if (reference == '#')
+                    {
+                        var content = GetFromGrid(xSeamonster, ySeamonster, gaplessImage);
+
+                        if (content != '#')
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
         }
 
         private char[,] removeGaps(Tile[,] sortedImage)
