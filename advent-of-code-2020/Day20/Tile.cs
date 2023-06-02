@@ -134,25 +134,5 @@ namespace advent_of_code_2020.Day20
         {
             return $"Tile {Id} Rotation.{Rotation} Reflection.{Reflection}";
         }
-
-        public string PrintIdAndGrid()
-        {
-            var sb = new StringBuilder();
-
-            for (int ii = 0; ii < Image.GetLength(0); ii++)
-            {
-                for (int jj = 0; jj < Image.GetLength(1); jj++)
-                {
-                    sb.Append(GetFromGrid(jj, ii, Image));
-                }
-
-                sb.AppendLine();
-            }
-
-            return
-                $"Tile {Id}:"
-                + Environment.NewLine
-                + sb;
-        }
     }
 }
