@@ -125,6 +125,7 @@
     <Compile Include="Day19\RuleSet.cs" />
     <Compile Include="Day19\Solution.cs" />
     <Compile Include="Day20\MultiDimensionalArray.cs" />
+    <Compile Include="Day20\Point2D.cs" />
     <Compile Include="Day20\Reflection.cs" />
     <Compile Include="Day20\Rotation.cs" />
     <Compile Include="Day20\Side.cs" />

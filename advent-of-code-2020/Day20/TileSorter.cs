@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using advent_of_code_2020.Day11;
 using static advent_of_code_2020.Day20.MultiDimensionalArray;
 
 namespace advent_of_code_2020.Day20
