@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using advent_of_code_2020.Day11;
 using static advent_of_code_2020.Day20.MultiDimensionalArray;
 
 namespace advent_of_code_2020.Day20
@@ -11,7 +12,7 @@ namespace advent_of_code_2020.Day20
         {
             {"                  # "},
             {"#    ##    ##    ###"},
-            {"#  #  #  #  #  #    "}
+            {" #  #  #  #  #  #   "}
         };
 
         private IDictionary<Side, Side> oppositeSide = new Dictionary<Side, Side>()
@@ -114,9 +115,27 @@ namespace advent_of_code_2020.Day20
 
             var gaplessImage = removeGaps(grid);
 
-            var seamonsterImage = spotSeaMonsters(gaplessImage);
+            var highlightedSeamonsterGrid = spotSeaMonsters(gaplessImage);
 
-            var roughness = determineRoughness(seamonsterImage);
+            var roughness = determineRoughness(highlightedSeamonsterGrid);
+
+            return roughness;
+        }
+
+        private long determineRoughness(char[,] spottedGrid)
+        {
+            int roughness = 0;
+
+            for (int y = 0; y < spottedGrid.GetLength(0); y++)
+            {
+                for (int x = 0; x < spottedGrid.GetLength(1); x++)
+                {
+                    if (GetFromGrid(x, y, spottedGrid) == '#')
+                    {
+                        roughness += 1;
+                    }
+                }
+            }
 
             return roughness;
         }
@@ -125,41 +144,89 @@ namespace advent_of_code_2020.Day20
         {
             var seamonsterGrid = CreateGridFromLines(seaMonsterTemplate, x => x);
 
-            int seamonsters = 0;
+            var seamonsters = new List<Point2D>();
 
-            while (seamonsters <= 0)
+            char[,] spottedGrid = null;
+
+            var daGrid = new Tile(-1, gaplessImage, Rotation.None, Reflection.None);
+
+            for (int possibleReflection = 0; possibleReflection < reflections.Count && seamonsters.Count == 0; possibleReflection++)
             {
-                for (int y = 0; y < gaplessImage.GetLength(1) - seamonsterGrid.GetLength(1) - 1; y++)
+                for (int possibleRotations = 0; possibleRotations < 4 && seamonsters.Count == 0; possibleRotations++)
                 {
-                    for (int x = 0; x < gaplessImage.GetLength(0) - seamonsterGrid.GetLength(0) - 1; x++)
+                    var permute = daGrid.FromPermutation(
+                        rotations[possibleRotations],
+                        reflections[possibleReflection],
+                        rotations);
+
+                    var currentGaplessImage = permute.Image;
+
+                    for (int y = 0; y < currentGaplessImage.GetLength(0) - seamonsterGrid.GetLength(0) - 1; y++)
                     {
-                        if (isSeamonster(x, y, gaplessImage, seamonsterGrid))
+                        for (int x = 0; x < currentGaplessImage.GetLength(1) - seamonsterGrid.GetLength(1) - 1; x++)
                         {
-                            seamonsters += 1;
+                            if (isSeamonster(x, y, currentGaplessImage, seamonsterGrid))
+                            {
+                                seamonsters.Add(new Point2D(x, y));
+                            }
                         }
                     }
-                }
 
-                if (seamonsters <= 0)
-                {
-                    RotateGridByDegrees(gaplessImage, Rotation.Clockwise90Degrees, rotations);
+                    if (seamonsters.Count > 0)
+                    {
+                        spottedGrid = CopyGrid(currentGaplessImage);
+                    }
                 }
             }
 
-            throw new NotImplementedException();
+            if (seamonsters.Count <= 0)
+            {
+                throw new ApplicationException("Couldn't find any sea monsters");
+            }
+
+            foreach (var seamonsterCoordinate in seamonsters)
+            {
+                markGridWithSpotted(
+                    seamonsterCoordinate.X,
+                    seamonsterCoordinate.Y,
+                    spottedGrid,
+                    seamonsterGrid);
+            }
+
+            return spottedGrid;
+        }
+
+        private void markGridWithSpotted(int x, int y, char[,] grid, char[,] seamonsterGrid)
+        {
+            for (int ySeamonsterInPictureCheck = y; ySeamonsterInPictureCheck < seamonsterGrid.GetLength(0) + y; ySeamonsterInPictureCheck++)
+            {
+                for (int xSeamonsterInPictureCheck = x; xSeamonsterInPictureCheck < seamonsterGrid.GetLength(1) + x; xSeamonsterInPictureCheck++)
+                {
+                    int ySeamonsterReference = ySeamonsterInPictureCheck - y;
+                    int xSeamonsterReference = xSeamonsterInPictureCheck - x;
+                    var reference = GetFromGrid(xSeamonsterReference, ySeamonsterReference, seamonsterGrid);
+
+                    if (reference == '#')
+                    {
+                        AssignToGrid(xSeamonsterInPictureCheck, ySeamonsterInPictureCheck, 'O', grid);
+                    }
+                }
+            }
         }
 
         private bool isSeamonster(int x, int y, char[,] gaplessImage, char[,] seamonsterGrid)
         {
-            for (int ySeamonster = y; ySeamonster < seamonsterGrid.GetLength(1) + y; ySeamonster++)
+            for (int ySeamonsterInPictureCheck = y; ySeamonsterInPictureCheck < seamonsterGrid.GetLength(0) + y; ySeamonsterInPictureCheck++)
             {
-                for (int xSeamonster = x; xSeamonster < seamonsterGrid.GetLength(0) + x; xSeamonster++)
+                for (int xSeamonsterInPictureCheck = x; xSeamonsterInPictureCheck < seamonsterGrid.GetLength(1) + x; xSeamonsterInPictureCheck++)
                 {
-                    var reference = GetFromGrid(xSeamonster - x, ySeamonster - y, seamonsterGrid);
+                    int ySeamonsterReference = ySeamonsterInPictureCheck - y;
+                    int xSeamonsterReference = xSeamonsterInPictureCheck - x;
+                    var reference = GetFromGrid(xSeamonsterReference, ySeamonsterReference, seamonsterGrid);
 
                     if (reference == '#')
                     {
-                        var content = GetFromGrid(xSeamonster, ySeamonster, gaplessImage);
+                        var content = GetFromGrid(xSeamonsterInPictureCheck, ySeamonsterInPictureCheck, gaplessImage);
 
                         if (content != '#')
                         {
@@ -209,11 +276,6 @@ namespace advent_of_code_2020.Day20
                     AssignToGrid(xGaplessCoordinate, yGaplessCoordinate, content, gaplessImage);
                 }
             }
-        }
-
-        private long determineRoughness(char[,] gaplessImage)
-        {
-            throw new NotImplementedException();
         }
 
         private Tile[,] sortTiles(IList<Tile> allTiles, IList<Tile> cornerPieces)
