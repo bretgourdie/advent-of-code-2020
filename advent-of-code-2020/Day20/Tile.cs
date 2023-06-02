@@ -120,8 +120,6 @@ namespace advent_of_code_2020.Day20
             return sb.ToString();
         }
 
-
-
         private static long parseIdLine(string idLine)
         {
             return long.Parse(
