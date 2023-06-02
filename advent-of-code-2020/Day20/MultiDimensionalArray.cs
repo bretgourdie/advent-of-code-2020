@@ -93,9 +93,9 @@ namespace advent_of_code_2020.Day20
         private static T[,] rotateGrid90DegreesClockwise<T>(T[,] baseGrid)
         {
             var newGrid = new T[baseGrid.GetLength(0), baseGrid.GetLength(1)];
-            for (int ii = 0; ii < baseGrid.GetLength(0); ii++)
+            for (int ii = 0; ii < baseGrid.GetLength(1); ii++)
             {
-                for (int jj = 0; jj < baseGrid.GetLength(1); jj++)
+                for (int jj = 0; jj < baseGrid.GetLength(0); jj++)
                 {
                     newGrid[jj, baseGrid.GetLength(0) - ii - 1] = baseGrid[ii, jj];
                 }
