@@ -85,8 +85,6 @@ namespace advent_of_code_2020.Day20
 
         private bool oneEdgeMatches(Tile tile, Tile other)
         {
-            int matches = 0;
-
             foreach (var edge in tile.Sides.Values)
             {
                 var reversedEdge = new string(edge.Reverse().ToArray());
