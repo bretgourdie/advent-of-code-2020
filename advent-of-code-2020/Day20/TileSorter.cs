@@ -14,7 +14,7 @@ namespace advent_of_code_2020.Day20
             {" #  #  #  #  #  #   "}
         };
 
-        private IDictionary<Side, Side> oppositeSide = new Dictionary<Side, Side>()
+        private readonly IDictionary<Side, Side> oppositeSide = new Dictionary<Side, Side>()
         {
             {Side.Left, Side.Right},
             {Side.Down, Side.Up},
@@ -22,7 +22,7 @@ namespace advent_of_code_2020.Day20
             {Side.Up, Side.Down}
         };
 
-        private IList<Side> sides = new List<Side>()
+        private readonly IList<Side> sides = new List<Side>()
         {
             Side.Up,
             Side.Left,
@@ -30,7 +30,7 @@ namespace advent_of_code_2020.Day20
             Side.Right
         };
 
-        private IList<Rotation> rotations = new List<Rotation>()
+        private readonly IList<Rotation> rotations = new List<Rotation>()
         {
             Rotation.None,
             Rotation.Clockwise90Degrees,
@@ -38,7 +38,7 @@ namespace advent_of_code_2020.Day20
             Rotation.Clockwise270Degrees
         };
 
-        private IList<Reflection> reflections = new List<Reflection>()
+        private readonly IList<Reflection> reflections = new List<Reflection>()
         {
             Reflection.None,
             Reflection.Horizontal
