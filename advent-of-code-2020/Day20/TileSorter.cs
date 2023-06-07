@@ -53,7 +53,7 @@ namespace advent_of_code_2020.Day20
             return cornerTiles.Aggregate((long) 1, (number, tile) => number * tile.Id);
         }
 
-        private IEnumerable<Tile> getCornerTiles(IList<Tile> tiles)
+        private IEnumerable<Tile> getCornerTiles(IEnumerable<Tile> tiles)
         {
             var tilesByMatches = new Dictionary<Tile, int>();
 
