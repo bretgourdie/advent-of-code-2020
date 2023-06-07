@@ -19,7 +19,9 @@ namespace advent_of_code_2020.Day20
         public readonly string Left;
         public readonly string Right;
 
-        public readonly IDictionary<Side, string> Sides;
+        private readonly IDictionary<Side, string> sides;
+
+        public IEnumerable<string> Edges => sides.Values;
 
         private static readonly IDictionary<Side, Side> oppositeSide = new Dictionary<Side, Side>()
         {
@@ -53,7 +55,7 @@ namespace advent_of_code_2020.Day20
             this.Left = left(image);
             this.Right = right(image);
 
-            Sides = new Dictionary<Side, string>()
+            sides = new Dictionary<Side, string>()
             {
                 { Side.Left, this.Left },
                 { Side.Right, this.Right },
@@ -84,7 +86,26 @@ namespace advent_of_code_2020.Day20
             Tile other,
             Side otherSide)
         {
-            return Sides[oppositeSide[otherSide]] == other.Sides[otherSide];
+            return sides[oppositeSide[otherSide]] == other.sides[otherSide];
+        }
+
+        public bool AnySideMatches(
+            Tile other)
+        {
+            foreach (var edge in Edges)
+            {
+                var reversedEdge = new string(edge.Reverse().ToArray());
+
+                foreach (var otherEdge in other.Edges)
+                {
+                    if (edge == otherEdge || reversedEdge == otherEdge)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         private string top(char[,] grid)

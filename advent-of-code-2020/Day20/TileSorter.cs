@@ -58,12 +58,9 @@ namespace advent_of_code_2020.Day20
 
                 foreach (var other in tiles)
                 {
-                    if (tile.Id != other.Id)
+                    if (tile.AnySideMatches(other))
                     {
-                        if (oneEdgeMatches(tile, other))
-                        {
-                            tilesByMatches[tile] += 1;
-                        }
+                        tilesByMatches[tile] += 1;
                     }
                 }
             }
@@ -73,24 +70,6 @@ namespace advent_of_code_2020.Day20
                 .Select(tileAndMatch => tileAndMatch.Key);
 
             return cornerPieces;
-        }
-
-        private bool oneEdgeMatches(Tile tile, Tile other)
-        {
-            foreach (var edge in tile.Sides.Values)
-            {
-                var reversedEdge = new string(edge.Reverse().ToArray());
-
-                foreach (var otherEdge in other.Sides.Values)
-                {
-                    if (edge == otherEdge || reversedEdge == otherEdge)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
         }
 
         public long GetWaterRoughness(IList<string> input)
