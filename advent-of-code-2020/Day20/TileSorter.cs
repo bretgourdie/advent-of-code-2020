@@ -56,7 +56,7 @@ namespace advent_of_code_2020.Day20
                     tilesByMatches[tile] = 0;
                 }
 
-                foreach (var other in tiles)
+                foreach (var other in tiles.Where(o => tile.Id != o.Id))
                 {
                     if (tile.AnySideMatches(other))
                     {
