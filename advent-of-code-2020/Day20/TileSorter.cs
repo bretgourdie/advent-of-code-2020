@@ -14,14 +14,6 @@ namespace advent_of_code_2020.Day20
             {" #  #  #  #  #  #   "}
         };
 
-        private readonly IDictionary<Side, Side> oppositeSide = new Dictionary<Side, Side>()
-        {
-            {Side.Left, Side.Right},
-            {Side.Down, Side.Up},
-            {Side.Right, Side.Left},
-            {Side.Up, Side.Down}
-        };
-
         private readonly IList<Side> sides = new List<Side>()
         {
             Side.Up,
@@ -462,13 +454,10 @@ namespace advent_of_code_2020.Day20
 
             foreach (var neighbor in neighbors)
             {
-                var neighboringSide = neighbor.Key;
+                var thisSide = neighbor.Key;
                 var neighboringTile = neighbor.Value;
 
-                var neighborEdge = neighboringTile.Sides[oppositeSide[neighboringSide]];
-                var thisEdge = tile.Sides[neighboringSide];
-
-                if (neighborEdge != thisEdge)
+                if (!neighboringTile.SideMatches(tile, thisSide))
                 {
                     return false;
                 }

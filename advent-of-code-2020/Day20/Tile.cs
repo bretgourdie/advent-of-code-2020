@@ -21,6 +21,14 @@ namespace advent_of_code_2020.Day20
 
         public readonly IDictionary<Side, string> Sides;
 
+        private static readonly IDictionary<Side, Side> oppositeSide = new Dictionary<Side, Side>()
+        {
+            {Side.Left, Side.Right},
+            {Side.Down, Side.Up},
+            {Side.Right, Side.Left},
+            {Side.Up, Side.Down}
+        };
+
         public Tile(IList<string> contents) :
             this(
                 parseIdLine(contents.First()),
@@ -70,6 +78,13 @@ namespace advent_of_code_2020.Day20
                 rotatedAndReflectedImage,
                 rotation,
                 reflection);
+        }
+
+        public bool SideMatches(
+            Tile other,
+            Side otherSide)
+        {
+            return Sides[oppositeSide[otherSide]] == other.Sides[otherSide];
         }
 
         private string top(char[,] grid)
