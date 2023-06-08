@@ -234,7 +234,7 @@ namespace advent_of_code_2020.Day20
             int dimension = (int)Math.Sqrt(allTiles.Count());
             Tile[,] grid = new Tile[dimension, dimension];
 
-            var nonCornerPieces = separateCornerPieces(allTiles, cornerPieces);
+            var nonCornerPieces = getNonCornerPieces(allTiles, cornerPieces);
 
             grid = sortTiles(
                 precomputeTiles(nonCornerPieces),
@@ -244,7 +244,7 @@ namespace advent_of_code_2020.Day20
             return grid;
         }
 
-        private IEnumerable<Tile> separateCornerPieces(IEnumerable<Tile> allTiles, IEnumerable<Tile> cornerPieces)
+        private IEnumerable<Tile> getNonCornerPieces(IEnumerable<Tile> allTiles, IEnumerable<Tile> cornerPieces)
         {
             return allTiles
                 .Where(tile => !cornerPieces.Contains(tile));
