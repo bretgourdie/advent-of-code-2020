@@ -112,9 +112,9 @@ namespace advent_of_code_2020.Day20
 
                     var currentGaplessImage = permute.Image;
 
-                    for (int y = 0; y < currentGaplessImage.GetLength(0) - seamonsterGrid.GetLength(0) - 1; y++)
+                    for (int y = 0; y < currentGaplessImage.GetLength(MultiDimensionalArray.YDimension) - seamonsterGrid.GetLength(MultiDimensionalArray.YDimension) - 1; y++)
                     {
-                        for (int x = 0; x < currentGaplessImage.GetLength(1) - seamonsterGrid.GetLength(1) - 1; x++)
+                        for (int x = 0; x < currentGaplessImage.GetLength(MultiDimensionalArray.XDimension) - seamonsterGrid.GetLength(MultiDimensionalArray.XDimension) - 1; x++)
                         {
                             if (isSeamonster(x, y, currentGaplessImage, seamonsterGrid))
                             {
@@ -149,9 +149,9 @@ namespace advent_of_code_2020.Day20
 
         private void markGridWithSpotted(int x, int y, char[,] grid, char[,] seamonsterGrid)
         {
-            for (int ySeamonsterInPictureCheck = y; ySeamonsterInPictureCheck < seamonsterGrid.GetLength(0) + y; ySeamonsterInPictureCheck++)
+            for (int ySeamonsterInPictureCheck = y; ySeamonsterInPictureCheck < seamonsterGrid.GetLength(MultiDimensionalArray.YDimension) + y; ySeamonsterInPictureCheck++)
             {
-                for (int xSeamonsterInPictureCheck = x; xSeamonsterInPictureCheck < seamonsterGrid.GetLength(1) + x; xSeamonsterInPictureCheck++)
+                for (int xSeamonsterInPictureCheck = x; xSeamonsterInPictureCheck < seamonsterGrid.GetLength(MultiDimensionalArray.XDimension) + x; xSeamonsterInPictureCheck++)
                 {
                     int ySeamonsterReference = ySeamonsterInPictureCheck - y;
                     int xSeamonsterReference = xSeamonsterInPictureCheck - x;
@@ -167,9 +167,9 @@ namespace advent_of_code_2020.Day20
 
         private bool isSeamonster(int x, int y, char[,] gaplessImage, char[,] seamonsterGrid)
         {
-            for (int ySeamonsterInPictureCheck = y; ySeamonsterInPictureCheck < seamonsterGrid.GetLength(0) + y; ySeamonsterInPictureCheck++)
+            for (int ySeamonsterInPictureCheck = y; ySeamonsterInPictureCheck < seamonsterGrid.GetLength(MultiDimensionalArray.YDimension) + y; ySeamonsterInPictureCheck++)
             {
-                for (int xSeamonsterInPictureCheck = x; xSeamonsterInPictureCheck < seamonsterGrid.GetLength(1) + x; xSeamonsterInPictureCheck++)
+                for (int xSeamonsterInPictureCheck = x; xSeamonsterInPictureCheck < seamonsterGrid.GetLength(MultiDimensionalArray.XDimension) + x; xSeamonsterInPictureCheck++)
                 {
                     int ySeamonsterReference = ySeamonsterInPictureCheck - y;
                     int xSeamonsterReference = xSeamonsterInPictureCheck - x;
@@ -192,12 +192,12 @@ namespace advent_of_code_2020.Day20
 
         private char[,] removeGaps(Tile[,] sortedImage)
         {
-            var dimension = sortedImage.GetLength(0) * (sortedImage[0,0].Image.GetLength(0) - 2);
+            var dimension = sortedImage.GetLength(MultiDimensionalArray.YDimension) * (sortedImage[0,0].Image.GetLength(MultiDimensionalArray.YDimension) - 2);
             char[,] gaplessImage = new char[dimension, dimension];
 
-            for (int x = 0; x < sortedImage.GetLength(0); x++)
+            for (int x = 0; x < sortedImage.GetLength(MultiDimensionalArray.XDimension); x++)
             {
-                for (int y = 0; y < sortedImage.GetLength(1); y++)
+                for (int y = 0; y < sortedImage.GetLength(MultiDimensionalArray.YDimension); y++)
                 {
                     writeBorderless(x, y, GetFromGrid(x, y, sortedImage), gaplessImage);
                 }
@@ -212,12 +212,12 @@ namespace advent_of_code_2020.Day20
             Tile tile,
             char[,] gaplessImage)
         {
-            var xGaplessReference = x * (tile.Image.GetLength(0) - 2);
-            var yGaplessReference = y * (tile.Image.GetLength(1) - 2);
+            var xGaplessReference = x * (tile.Image.GetLength(MultiDimensionalArray.XDimension) - 2);
+            var yGaplessReference = y * (tile.Image.GetLength(MultiDimensionalArray.YDimension) - 2);
 
-            for (int xTileReference = 1; xTileReference < tile.Image.GetLength(0) - 1; xTileReference++)
+            for (int xTileReference = 1; xTileReference < tile.Image.GetLength(MultiDimensionalArray.XDimension) - 1; xTileReference++)
             {
-                for (int yTileReference = 1; yTileReference < tile.Image.GetLength(1) - 1; yTileReference++)
+                for (int yTileReference = 1; yTileReference < tile.Image.GetLength(MultiDimensionalArray.YDimension) - 1; yTileReference++)
                 {
                     var content = GetFromGrid(xTileReference, yTileReference, tile.Image);
 
@@ -274,13 +274,18 @@ namespace advent_of_code_2020.Day20
                 return grid;
             }
 
-            for (int x = 0; x < grid.GetLength(0); x++)
+            for (int x = 0; x < grid.GetLength(MultiDimensionalArray.XDimension); x++)
             {
-                for (int y = 0; y < grid.GetLength(1); y++)
+                for (int y = 0; y < grid.GetLength(MultiDimensionalArray.YDimension); y++)
                 {
                     if (GetFromGrid(x, y, grid) == null && isAppropriatePlacement(x, y, grid))
                     {
-                        IEnumerable<Tile> tilesToUse = getTilesToUse(nonCornerPieces, cornerPieces, x, y, grid.GetLength(0));
+                        IEnumerable<Tile> tilesToUse = getTilesToUse(
+                            nonCornerPieces,
+                            cornerPieces,
+                            x,
+                            y,
+                            grid.GetLength(MultiDimensionalArray.YDimension));
 
                         foreach (var tile in tilesToUse)
                         {
@@ -289,10 +294,10 @@ namespace advent_of_code_2020.Day20
                                 AssignToGrid(x, y, tile, grid);
 
                                 var newGrid = sortTiles(
-                                    isAppraisingCorner(x, y, grid.GetLength(0))
+                                    isAppraisingCorner(x, y, grid.GetLength(MultiDimensionalArray.YDimension))
                                         ? nonCornerPieces
                                         : nonCornerPieces.Where(other => other.Id != tile.Id).ToList(),
-                                    isAppraisingCorner(x, y, grid.GetLength(0))
+                                    isAppraisingCorner(x, y, grid.GetLength(MultiDimensionalArray.YDimension))
                                         ? cornerPieces.Where(other => other.Id != tile.Id).ToList()
                                         : cornerPieces,
                                     grid);
@@ -358,7 +363,10 @@ namespace advent_of_code_2020.Day20
             var newX = getXFromSide(x, side);
             var newY = getYFromSide(y, side);
 
-            if (newX < 0 || newY < 0 || newX >= grid.GetLength(0) || newY >= grid.GetLength(1))
+            if (newX < 0
+                || newY < 0
+                || newX >= grid.GetLength(MultiDimensionalArray.XDimension)
+                || newY >= grid.GetLength(MultiDimensionalArray.YDimension))
             {
                 return null;
             }

@@ -6,8 +6,8 @@ namespace advent_of_code_2020.Day20
 {
     static class MultiDimensionalArray
     {
-        private static readonly int XDimension = 1;
-        private static readonly int YDimension = 0;
+        public static readonly int XDimension = 1;
+        public static readonly int YDimension = 0;
 
         private static readonly IDictionary<Side, EdgeIteration> sideToEdgeIterations =
             new Dictionary<Side, EdgeIteration>()
