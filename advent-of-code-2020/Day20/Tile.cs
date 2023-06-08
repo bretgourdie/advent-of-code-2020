@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using static advent_of_code_2020.Day20.MultiDimensionalArray;
 
 namespace advent_of_code_2020.Day20
@@ -13,11 +12,6 @@ namespace advent_of_code_2020.Day20
 
         public readonly Rotation Rotation;
         public readonly Reflection Reflection;
-
-        public readonly string Top;
-        public readonly string Bottom;
-        public readonly string Left;
-        public readonly string Right;
 
         private readonly IDictionary<Side, string> sides;
 
@@ -50,17 +44,12 @@ namespace advent_of_code_2020.Day20
             this.Rotation = rotation;
             this.Reflection = reflection;
 
-            this.Top = top(image);
-            this.Bottom = bottom(image);
-            this.Left = left(image);
-            this.Right = right(image);
-
             sides = new Dictionary<Side, string>()
             {
-                { Side.Left, this.Left },
-                { Side.Right, this.Right },
-                { Side.Down, this.Bottom },
-                { Side.Up, this.Top }
+                { Side.Left, String.Concat(MultiDimensionalArray.GetEdge(image, Side.Left)) },
+                { Side.Right, String.Concat(MultiDimensionalArray.GetEdge(image, Side.Right)) },
+                { Side.Down, String.Concat(MultiDimensionalArray.GetEdge(image, Side.Down)) },
+                { Side.Up, String.Concat(MultiDimensionalArray.GetEdge(image, Side.Up)) }
             };
         }
 
@@ -108,54 +97,6 @@ namespace advent_of_code_2020.Day20
             return false;
         }
 
-        private string top(char[,] grid)
-        {
-            var sb = new StringBuilder();
-            var max = grid.GetLength(0);
-            for (int ii = 0; ii < max; ii++)
-            {
-                sb.Append(GetFromGrid(ii, 0, grid));
-            }
-
-            return sb.ToString();
-        }
-
-        private string bottom(char[,] grid)
-        {
-            var sb = new StringBuilder();
-            var max = grid.GetLength(0);
-            for (int ii = 0; ii < max; ii++)
-            {
-                sb.Append(GetFromGrid(ii, max - 1, grid));
-            }
-
-            return sb.ToString();
-        }
-
-        private string left(char[,] grid)
-        {
-            var sb = new StringBuilder();
-            var max = grid.GetLength(1);
-            for (int ii = 0; ii < max; ii++)
-            {
-                sb.Append(GetFromGrid(0, ii, grid));
-            }
-
-            return sb.ToString();
-        }
-
-        private string right(char[,] grid)
-        {
-            var sb = new StringBuilder();
-            var max = grid.GetLength(1);
-            for (int ii = 0; ii < max; ii++)
-            {
-                sb.Append(GetFromGrid(max - 1, ii, grid));
-            }
-
-            return sb.ToString();
-        }
-
         private static long parseIdLine(string idLine)
         {
             return long.Parse(
@@ -168,5 +109,7 @@ namespace advent_of_code_2020.Day20
         {
             return $"Tile {Id} Rotation.{Rotation} Reflection.{Reflection}";
         }
+
+
     }
 }
