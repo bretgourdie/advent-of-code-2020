@@ -109,7 +109,5 @@ namespace advent_of_code_2020.Day20
         {
             return $"Tile {Id} Rotation.{Rotation} Reflection.{Reflection}";
         }
-
-
     }
 }
