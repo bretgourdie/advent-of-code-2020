@@ -84,25 +84,9 @@ namespace advent_of_code_2020.Day20
 
             var highlightedSeamonsterGrid = spotSeaMonsters(gaplessImage);
 
-            var roughness = determineRoughness(highlightedSeamonsterGrid);
-
-            return roughness;
-        }
-
-        private long determineRoughness(char[,] spottedGrid)
-        {
-            int roughness = 0;
-
-            for (int y = 0; y < spottedGrid.GetLength(0); y++)
-            {
-                for (int x = 0; x < spottedGrid.GetLength(1); x++)
-                {
-                    if (GetFromGrid(x, y, spottedGrid) == '#')
-                    {
-                        roughness += 1;
-                    }
-                }
-            }
+            var roughness = MultiDimensionalArray.CountConditions(
+                highlightedSeamonsterGrid,
+                x => x == '#');
 
             return roughness;
         }

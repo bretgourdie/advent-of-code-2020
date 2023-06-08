@@ -104,16 +104,34 @@ namespace advent_of_code_2020.Day20
 
         private static T[,] rotateGrid90DegreesClockwise<T>(T[,] baseGrid)
         {
-            var newGrid = new T[baseGrid.GetLength(0), baseGrid.GetLength(1)];
-            for (int ii = 0; ii < baseGrid.GetLength(1); ii++)
+            var newGrid = new T[baseGrid.GetLength(YDimension), baseGrid.GetLength(XDimension)];
+            for (int x = 0; x < baseGrid.GetLength(XDimension); x++)
             {
-                for (int jj = 0; jj < baseGrid.GetLength(0); jj++)
+                for (int y = 0; y < baseGrid.GetLength(YDimension); y++)
                 {
-                    newGrid[jj, baseGrid.GetLength(0) - ii - 1] = baseGrid[ii, jj];
+                    newGrid[y, baseGrid.GetLength(YDimension) - x - 1] = baseGrid[x, y];
                 }
             }
 
             return newGrid;
+        }
+
+        public static long CountConditions<T>(T[,] grid, Func<T, bool> condition)
+        {
+            long instances = 0;
+
+            for (int y = 0; y < grid.GetLength(YDimension); y++)
+            {
+                for (int x = 0; x < grid.GetLength(XDimension); x++)
+                {
+                    if (condition.Invoke(GetFromGrid(x, y, grid)))
+                    {
+                        instances += 1;
+                    }
+                }
+            }
+
+            return instances;
         }
 
         public static T[,] CopyGrid<T>(T[,] referenceImage)
