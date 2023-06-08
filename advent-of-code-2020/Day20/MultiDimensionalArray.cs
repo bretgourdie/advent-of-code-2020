@@ -20,8 +20,8 @@ namespace advent_of_code_2020.Day20
 
         public static T[,] FlipHorizontal<T>(T[,] image)
         {
-            var xMax = image.GetLength(0);
-            var yMax = image.GetLength(1);
+            var xMax = image.GetLength(XDimension);
+            var yMax = image.GetLength(YDimension);
 
             var flip = new T[xMax, yMax];
 
@@ -38,11 +38,11 @@ namespace advent_of_code_2020.Day20
 
         public static bool AnyAssigned<T>(T[,] grid)
         {
-            for (int ii = 0; ii < grid.GetLength(0); ii++)
+            for (int y = 0; y < grid.GetLength(YDimension); y++)
             {
-                for (int jj = 0; jj < grid.GetLength(1); jj++)
+                for (int x = 0; x < grid.GetLength(XDimension); x++)
                 {
-                    if (grid[ii, jj] != null)
+                    if (GetFromGrid(x, y, grid) != null)
                     {
                         return true;
                     }
@@ -54,8 +54,8 @@ namespace advent_of_code_2020.Day20
 
         public static T GetFromGrid<T>(int x, int y, T[,] grid)
         {
-            if (0 <= x && x < grid.GetLength(1)
-                       && 0 <= y && y < grid.GetLength(0))
+            if (0 <= x && x < grid.GetLength(XDimension)
+                       && 0 <= y && y < grid.GetLength(YDimension))
             {
                 return (T)grid[y, x];
             }
@@ -147,11 +147,11 @@ namespace advent_of_code_2020.Day20
 
             var grid = new T[width, length];
 
-            for (int ii = 0; ii < lines.Count; ii++)
+            for (int y = 0; y < lines.Count; y++)
             {
-                for (int jj = 0; jj < lines[ii].Length; jj++)
+                for (int x = 0; x < lines[y].Length; x++)
                 {
-                    AssignToGrid<T>(jj, ii, conversion(lines[ii][jj]), grid);
+                    AssignToGrid(x, y, conversion(lines[y][x]), grid);
                 }
             }
 
