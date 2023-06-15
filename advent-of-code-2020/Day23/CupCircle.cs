@@ -7,11 +7,11 @@ namespace advent_of_code_2020.Day23
 {
     class CupCircle
     {
-        private LinkedList<int> _circle;
+        private readonly LinkedList<int> _circle;
         private LinkedListNode<int> _currentCup;
         private LinkedListNode<int> _destination;
-        private IDictionary<int, LinkedListNode<int>> _labelToCup;
-        private IList<LinkedListNode<int>> _pickedUpCups = new List<LinkedListNode<int>>(3);
+        private readonly IDictionary<int, LinkedListNode<int>> _labelToCup;
+        private readonly IList<LinkedListNode<int>> _pickedUpCups = new List<LinkedListNode<int>>(3);
         private int _movesMade;
         private readonly ICupInstructions _instructions;
 
