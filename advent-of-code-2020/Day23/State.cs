@@ -5,18 +5,18 @@ namespace advent_of_code_2020.Day23
     class State
     {
         //public readonly LinkedList<int> Circle;
-        public readonly IList<int> PickedUpCups;
+        public readonly IList<LinkedListNode<int>> PickedUpCups;
         public readonly int Destination;
         public readonly int CurrentCup;
 
         public State(
             LinkedList<int> circle,
-            IList<int> pickedUpCups,
+            IList<LinkedListNode<int>> pickedUpCups,
             LinkedListNode<int> destination,
             LinkedListNode<int> currentCup)
         {
             //Circle = new LinkedList<int>(circle);
-            PickedUpCups = new List<int>(pickedUpCups);
+            PickedUpCups = new List<LinkedListNode<int>>(pickedUpCups);
             Destination = destination.Value;
             CurrentCup = currentCup.Value;
         }
@@ -37,12 +37,12 @@ namespace advent_of_code_2020.Day23
         }
 
         private bool listsMatch(
-            IList<int> a,
-            IList<int> b)
+            IList<LinkedListNode<int>> a,
+            IList<LinkedListNode<int>> b)
         {
             for (int ii = 0; ii < a.Count; ii++)
             {
-                if (a[ii] != b[ii])
+                if (a[ii].Value != b[ii].Value)
                     return false;
             }
 

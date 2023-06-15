@@ -10,7 +10,8 @@ namespace advent_of_code_2020.Day23
         private LinkedList<int> _circle;
         private LinkedListNode<int> _currentCup;
         private LinkedListNode<int> _destination;
-        private IList<int> _pickedUpCups;
+        private IDictionary<int, LinkedListNode<int>> _labelToCup;
+        private IList<LinkedListNode<int>> _pickedUpCups = new List<LinkedListNode<int>>(3);
         private int _movesMade;
         private readonly ICupInstructions _instructions;
 
@@ -22,7 +23,24 @@ namespace advent_of_code_2020.Day23
 
             _circle = _instructions.makeCups(cups);
 
+            _labelToCup = makeLookup(_circle);
+
             _currentCup = _circle.First;
+        }
+
+        private IDictionary<int, LinkedListNode<int>> makeLookup(LinkedList<int> circle)
+        {
+            var lookup = new Dictionary<int, LinkedListNode<int>>();
+
+            var current = circle.First;
+
+            do
+            {
+                lookup.Add(current.Value, current);
+                current = getNextCup(current);
+            } while (current != circle.First);
+
+            return lookup;
         }
 
         public string MakeMoves()
@@ -40,7 +58,7 @@ namespace advent_of_code_2020.Day23
 
         public void Move()
         {
-            _pickedUpCups = pickUpCups();
+            pickUpCups();
             _destination = findDestinationCup();
             printStatus();
             moveTheCups();
@@ -79,7 +97,7 @@ namespace advent_of_code_2020.Day23
 
         private void printStatus()
         {
-            if ((_movesMade + 1) % 100 == 0)
+            if ((_movesMade + 1) % 1000 == 0)
                 Console.WriteLine($" -- move {_movesMade + 1} --");
         }
 
@@ -116,33 +134,32 @@ namespace advent_of_code_2020.Day23
 
         private LinkedListNode<int> getTarget(int value)
         {
-            while (value < _circle.Min() || _pickedUpCups.Contains(value))
+            while (value < _circle.Min() || _pickedUpCups.Any(c => c.Value == value))
             {
                 if (value < _circle.Min())
                 {
                     value = _circle.Max();
                 }
 
-                if (_pickedUpCups.Contains(value))
+                if (_pickedUpCups.Any(c => c.Value == value))
                 {
                     value -= 1;
                 }
             }
 
-            return _circle.Find(value);
+            return _labelToCup[value];
         }
 
-        private IList<int> pickUpCups()
+        private void pickUpCups()
         {
             var currentPickedUpCup = getNextCup(_currentCup);
-            var pickedUpCups = new List<int>();
+
+            _pickedUpCups.Clear();
             for (int ii = 0; ii < 3; ii++)
             {
-                pickedUpCups.Add(currentPickedUpCup.Value);
+                _pickedUpCups.Add(currentPickedUpCup);
                 currentPickedUpCup = getNextCup(currentPickedUpCup);
             }
-
-            return pickedUpCups;
         }
 
         private LinkedListNode<int> getNextCup(LinkedListNode<int> fromCup) =>
