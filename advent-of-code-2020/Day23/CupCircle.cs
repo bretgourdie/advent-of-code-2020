@@ -14,6 +14,8 @@ namespace advent_of_code_2020.Day23
         private readonly IList<LinkedListNode<int>> _pickedUpCups = new List<LinkedListNode<int>>(3);
         private int _movesMade;
         private readonly ICupInstructions _instructions;
+        private readonly int _min;
+        private readonly int _max;
 
         private List<State> allStates = new List<State>();
 
@@ -26,6 +28,9 @@ namespace advent_of_code_2020.Day23
             _labelToCup = makeLookup(_circle);
 
             _currentCup = _circle.First;
+
+            _min = _circle.Min();
+            _max = _circle.Max();
         }
 
         private IDictionary<int, LinkedListNode<int>> makeLookup(LinkedList<int> circle)
@@ -112,6 +117,7 @@ namespace advent_of_code_2020.Day23
         {
             foreach (var pickedUpCup in _pickedUpCups)
             {
+                // TODO: change O(N) operation to O(1)
                 _circle.Remove(pickedUpCup);
             }
         }
@@ -134,11 +140,11 @@ namespace advent_of_code_2020.Day23
 
         private LinkedListNode<int> getTarget(int value)
         {
-            while (value < _circle.Min() || _pickedUpCups.Any(c => c.Value == value))
+            while (value < _min || _pickedUpCups.Any(c => c.Value == value))
             {
-                if (value < _circle.Min())
+                if (value < _min)
                 {
-                    value = _circle.Max();
+                    value = _max;
                 }
 
                 if (_pickedUpCups.Any(c => c.Value == value))
