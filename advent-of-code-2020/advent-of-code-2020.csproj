@@ -124,8 +124,28 @@
     <Compile Include="Day19\Rule.cs" />
     <Compile Include="Day19\RuleSet.cs" />
     <Compile Include="Day19\Solution.cs" />
+    <Compile Include="Day20\MultiDimensionalArray.cs" />
+    <Compile Include="Day20\Point2D.cs" />
+    <Compile Include="Day20\Reflection.cs" />
+    <Compile Include="Day20\Rotation.cs" />
+    <Compile Include="Day20\Side.cs" />
+    <Compile Include="Day20\Solution.cs" />
+    <Compile Include="Day20\Tile.cs" />
+    <Compile Include="Day20\TileSorter.cs" />
     <Compile Include="Day21\Recipe.cs" />
     <Compile Include="Day21\Solution.cs" />
+    <Compile Include="Day22\Combat.cs" />
+    <Compile Include="Day22\Game.cs" />
+    <Compile Include="Day22\ICombatRules.cs" />
+    <Compile Include="Day22\Deck.cs" />
+    <Compile Include="Day22\RecursiveCombat.cs" />
+    <Compile Include="Day22\Solution.cs" />
+    <Compile Include="Day22\WinningState.cs" />
+    <Compile Include="Day23\CupCircle.cs" />
+    <Compile Include="Day23\ICupInstructions.cs" />
+    <Compile Include="Day23\Solution.cs" />
+    <Compile Include="Day23\TranslatedInstructions.cs" />
+    <Compile Include="Day23\UntranslatedInstructions.cs" />
     <Compile Include="Day24\Lobby.cs" />
     <Compile Include="Day24\Point2D.cs" />
     <Compile Include="Day24\Solution.cs" />
@@ -258,11 +278,29 @@
     <Content Include="Day19\input.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Day20\example.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day20\input.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Day21\example.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Day21\input.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day22\example.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day22\input.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day23\example.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Day23\input.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Day24\example.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
