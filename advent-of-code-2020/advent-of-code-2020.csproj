@@ -144,7 +144,6 @@
     <Compile Include="Day23\CupCircle.cs" />
     <Compile Include="Day23\ICupInstructions.cs" />
     <Compile Include="Day23\Solution.cs" />
-    <Compile Include="Day23\State.cs" />
     <Compile Include="Day23\TranslatedInstructions.cs" />
     <Compile Include="Day23\UntranslatedInstructions.cs" />
     <Compile Include="Day24\Lobby.cs" />
